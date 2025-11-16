@@ -1,0 +1,23 @@
+id: tests.unit
+rules:
+- id: tests.setup
+  level: MUST
+  desc: Use AutoFixture for test setup
+- id: tests.mocks
+  level: MUST
+  desc: Use NSubstitute as mocking library
+- id: tests.structure.mirror-bounded-context
+  level: MUST
+  desc: Create one test project per bounded context mirroring production structure
+- id: tests.structure.naming-convention  
+  level: MUST
+  desc: Name test projects as [BoundedContext].Tests (e.g., ProductCatalog.Tests)
+- id: tests.organization.layer-folders
+  level: SHOULD
+  desc: Organize tests in Domain/ and Application/ folders within test projects
+- id: tests.utilities.shared-location
+  level: SHOULD
+  desc: Place mocks and test builders in TestUtilities/ folder within each test project
+- id: tests.dependencies.bounded
+  level: MUST
+  desc: Test projects should only reference their respective Domain and Application projects

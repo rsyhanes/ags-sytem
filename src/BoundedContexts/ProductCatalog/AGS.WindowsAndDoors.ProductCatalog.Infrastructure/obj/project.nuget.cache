@@ -1,13 +1,14 @@
 {
   "version": 2,
-  "dgSpecHash": "mfC+mI1xBw8=",
+  "dgSpecHash": "A56bLKHmPvY=",
   "success": true,
   "projectFilePath": "D:\\Source\\AGS Windows And Doors\\system\\src\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\renier\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\renier\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
     "C:\\Users\\renier\\.nuget\\packages\\languageext.core\\4.4.8\\languageext.core.4.4.8.nupkg.sha512",
-    "C:\\Users\\renier\\.nuget\\packages\\masstransit.abstractions\\8.2.5\\masstransit.abstractions.8.2.5.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\mediatr\\12.2.0\\mediatr.12.2.0.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\mediatr.contracts\\2.0.1\\mediatr.contracts.2.0.1.nupkg.sha512",
     "C:\\Users\\renier\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\7.0.0\\microsoft.bcl.asyncinterfaces.7.0.0.nupkg.sha512",
     "C:\\Users\\renier\\.nuget\\packages\\microsoft.build.framework\\17.8.3\\microsoft.build.framework.17.8.3.nupkg.sha512",
     "C:\\Users\\renier\\.nuget\\packages\\microsoft.build.locator\\1.7.8\\microsoft.build.locator.1.7.8.nupkg.sha512",

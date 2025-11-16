@@ -1,4 +1,4 @@
-using MassTransit.Mediator;
+using MediatR;
 using AGS.WindowsAndDoors.ProductCatalog.Application.DTOs;
 
 namespace AGS.WindowsAndDoors.ProductCatalog.Application.UseCases.CreateItem;
@@ -14,4 +14,4 @@ public record CreateItemCommand(
     string? ColorHex = null,
     decimal? DimensionValue = null,
     string? DimensionUnit = null
-) : Request<ItemDto>;
+) : IRequest<ItemDto>;

@@ -1,7 +1,7 @@
 spec:
   id: items.manage-catalog-item.v1
   objective: "As an engineer, I can create and manage catalog items (building components) with codes, names, and measurement units."
-  packs: ["domain.purity", "ports.contracts", "adapters.conformance", "web-api", "persistence"]
+  packs: ["domain.modeling", "domain.events", "application.services", "mapping.layer", "tests.unit"]
   scope:
     domain:
       - "Entity: Item(code, name, measure)"

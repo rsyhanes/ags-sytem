@@ -63,9 +63,9 @@
               "target": "Package",
               "version": "[4.4.8, )"
             },
-            "MassTransit.Abstractions": {
+            "MediatR": {
               "target": "Package",
-              "version": "[8.2.5, )"
+              "version": "[12.2.0, )"
             }
           },
           "imports": [
