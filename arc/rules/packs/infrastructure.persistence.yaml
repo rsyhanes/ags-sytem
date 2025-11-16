@@ -1,0 +1,19 @@
+id: infrastructure.persistence
+rules:
+- id: persistence.ef-compatible
+  level: MUST
+  desc: Use mutable classes with get/set properties for ORM compatibility.
+- id: persistence.state-field
+  level: MUST
+  desc: Store domain lifecycle state using a 'State' or 'Status' field.
+- id: persistence.rehydration-complete
+  level: MUST
+  desc: Persistence model must contain all information required to fully rehydrate
+    domain objects.
+- id: persistence.manual-mapping
+  level: SHOULD
+  desc: Mappings between domain and persistence types must be explicit and manually
+    coded.
+- id: persistence.mapping-layer-separated
+  level: SHOULD
+  desc: Separate mapping logic from both domain and persistence layers.

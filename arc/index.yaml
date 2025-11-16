@@ -1,0 +1,99 @@
+arc:
+  version: 1
+  description: "Architecture index for specs, rules, contracts, and views in this monorepo."
+
+  tech_stack:
+    frontend: "Angular"
+    deployment: "Azure"
+    backend: ".NET / .NET Aspire (where applicable)"
+    style: "Ports & Adapters (Hexagonal), domain-first, spec-driven"
+
+  locations:
+    specs: "./specs"
+    rules: "./rules"
+    contracts: "./contracts"
+    views: "./views"
+    ontology: "./ontology"
+    agent_guidelines: "./agent-guidelines.md"
+
+  # ---------- ID & path conventions ----------
+  conventions:
+    # Specs
+    spec:
+      id_pattern: "<context>.<feature>.v<version>"
+      example_ids:
+        - "todo.mvp.v1"
+        - "users.register-user.v1"
+      path_template: "./specs/{spec_id}.spec.yaml"
+
+    # Contracts
+    contract:
+      http_openapi:
+        id_pattern: "<context>.openapi.v<version>"
+        base_dir: "./contracts/openapi"
+        example:
+          id: "users.openapi.v1"
+          path: "./contracts/openapi/users.v1.yaml"
+      messaging_asyncapi:
+        id_pattern: "<context>.events.v<version>"
+        base_dir: "./contracts/asyncapi"
+        example:
+          id: "todo.events.v1"
+          path: "./contracts/asyncapi/todo-events.v1.yaml"
+      schema_json:
+        base_dir: "./contracts/schemas"
+        note: "Used for driven ports (e.g., EmailSenderPort, RepoPort)."
+
+    # Rule packs
+    rules:
+      packs_dir: "./rules/packs"
+      examples:
+        - "domain.purity.yaml"
+        - "ports.contracts.yaml"
+        - "adapters.conformance.yaml"
+        - "web-api.yaml"
+        - "messaging.yaml"
+
+    # Code layout for bounded contexts / services (Ports & Adapters Lite)
+    layout:
+      pattern: "src/BoundedContexts/<context>.<layer>"
+      layers:
+        Domain: "Pure domain model and invariants."
+        Application: "Use-cases/application services; orchestrates domain; depends on domain."
+        Infrastrure: "Implementations of ports: HTTP, DB, messaging, etc."
+      examples:
+        - "src/BoundedContexts/OrderProcessing/AGS.WindowsAndDoors.OrderProcessing.Domain"
+        - "src/BoundedContexts/OrderProcessing/AGS.WindowsAndDoors.OrderProcessing.Application"
+        - "src/BoundedContexts/OrderProcessing/AGS.WindowsAndDoors.OrderProcessing.Infrastructure"
+
+  # ---------- How agents should operate ----------
+  agent_flow:
+    - "1) Read './arc/index.yaml' (this file) to understand layout and conventions."
+    - "2) Read './arc/agent-guidelines.md' for implementation and folder rules."
+    - "3) Load the target spec from './arc/specs'. Specs are the source of intent."
+    - "4) From the spec, resolve referenced rule packs in './arc/rules' by ID."
+    - "5) From the spec, resolve referenced contracts in './arc/contracts' (OpenAPI/AsyncAPI/JSON Schemas)."
+    - "6) Plan changes that:"
+    - "   - respect the Ports & Adapters layout,"
+    - "   - keep domain free of framework/infra,"
+    - "   - keep adapters conforming to contracts."
+    - "7) Implement only files/paths that align with the declared layout and spec."
+    - "8) Generate or update tests that map 1:1 to scenarios defined in the spec."
+    - "9) Do not introduce new top-level directories or patterns without updating './arc/index.yaml' and './arc/agent-guidelines.md'."
+
+  # ---------- Source of truth priorities ----------
+  precedence:
+    - "Specs (*.spec.yaml) define feature intent, scope, and scenarios."
+    - "Contracts (OpenAPI/AsyncAPI/JSON Schemas) define I/O truth and port shapes."
+    - "Rules & packs define reusable constraints; specs reference them by ID."
+    - "Tests & evals prove conformance to specs, contracts, and rules."
+    - "Views (4+1) and diagrams are documentation only; they must not contradict specs/contracts."
+    - "Ontology is a navigational/analysis layer built from the above, not a separate truth."
+
+  rules_of_engagement_for_agents:
+    - "Always start from this index and the referenced spec; do not guess structure."
+    - "Honor the Ports & Adapters layout when adding or modifying code."
+    - "Do not duplicate rule definitions; use rule pack IDs from './arc/rules'."
+    - "If a new rule is identified and does not exist, ask before creating it."
+    - "If a spec and a view disagree, follow the spec and contracts but propose the view update."
+    - "If a required path or ID is missing, propose a minimal, consistent addition under this structure."

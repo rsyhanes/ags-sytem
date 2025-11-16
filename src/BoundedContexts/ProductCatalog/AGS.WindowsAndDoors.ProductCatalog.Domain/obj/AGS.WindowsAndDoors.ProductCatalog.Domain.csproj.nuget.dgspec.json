@@ -1,0 +1,144 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\Source\\AGS Windows And Doors\\system\\src\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Domain\\AGS.WindowsAndDoors.ProductCatalog.Domain.csproj": {}
+  },
+  "projects": {
+    "D:\\Source\\AGS Windows And Doors\\system\\src\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Domain\\AGS.WindowsAndDoors.ProductCatalog.Domain.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Source\\AGS Windows And Doors\\system\\src\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Domain\\AGS.WindowsAndDoors.ProductCatalog.Domain.csproj",
+        "projectName": "AGS.WindowsAndDoors.ProductCatalog.Domain",
+        "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Domain\\AGS.WindowsAndDoors.ProductCatalog.Domain.csproj",
+        "packagesPath": "C:\\Users\\renier\\.nuget\\packages\\",
+        "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Domain\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {
+              "D:\\Source\\AGS Windows And Doors\\system\\src\\SharedKernel\\AGS.WindowsAndDoors.SharedKernel\\AGS.WindowsAndDoors.SharedKernel.csproj": {
+                "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\SharedKernel\\AGS.WindowsAndDoors.SharedKernel\\AGS.WindowsAndDoors.SharedKernel.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\Source\\AGS Windows And Doors\\system\\src\\SharedKernel\\AGS.WindowsAndDoors.SharedKernel\\AGS.WindowsAndDoors.SharedKernel.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\Source\\AGS Windows And Doors\\system\\src\\SharedKernel\\AGS.WindowsAndDoors.SharedKernel\\AGS.WindowsAndDoors.SharedKernel.csproj",
+        "projectName": "AGS.WindowsAndDoors.SharedKernel",
+        "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\SharedKernel\\AGS.WindowsAndDoors.SharedKernel\\AGS.WindowsAndDoors.SharedKernel.csproj",
+        "packagesPath": "C:\\Users\\renier\\.nuget\\packages\\",
+        "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\SharedKernel\\AGS.WindowsAndDoors.SharedKernel\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net9.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net9.0": {
+            "targetAlias": "net9.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        },
+        "SdkAnalysisLevel": "9.0.300"
+      },
+      "frameworks": {
+        "net9.0": {
+          "targetAlias": "net9.0",
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

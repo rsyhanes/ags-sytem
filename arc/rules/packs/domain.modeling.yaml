@@ -1,0 +1,18 @@
+id: domain.modeling
+rules:
+- id: domain.modeling.immutability
+  level: MUST
+  desc: All domain entities and value objects must be defined as immutable record
+    types.
+- id: domain.modeling.explicit-state
+  level: MUST
+  desc: Model lifecycle states using distinct types, not flags or enums.
+- id: domain.modeling.no-mutation
+  level: MUST
+  desc: Domain methods must not mutate state in place. Return new state instances.
+- id: domain.modeling.value-object-replace
+  level: SHOULD
+  desc: Replace value objects entirely when updating their contents.
+- id: domain.modeling.enforce-invariants
+  level: MUST
+  desc: Ensure domain transitions enforce business invariants internally.

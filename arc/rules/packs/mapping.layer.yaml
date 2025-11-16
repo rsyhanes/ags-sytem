@@ -1,0 +1,17 @@
+id: mapping.layer
+rules:
+- id: mapping.explicit
+  level: MUST
+  desc: Mapping logic between layers must be explicit, predictable, and testable.
+- id: mapping.by-state
+  level: MUST
+  desc: Use state field to map persistence model to correct domain type.
+- id: mapping.twoway
+  level: MUST
+  desc: Provide both ToDomainModel and ToPersistenceModel methods for each aggregate.
+- id: mapping.fallback
+  level: MUST
+  desc: Raise error if a state cannot be mapped to a valid domain type.
+- id: mapping.roundtrip-tested
+  level: SHOULD
+  desc: Test round-trip integrity of mapping logic in both directions.

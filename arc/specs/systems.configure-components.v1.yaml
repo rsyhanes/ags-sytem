@@ -1,0 +1,82 @@
+spec:
+  id: systems.configure-components.v1
+  objective: "As an engineer, I can configure system components by linking systems to items with quantities, angles, and dynamic length calculation formulas."
+  packs: ["domain.purity", "ports.contracts", "adapters.conformance", "web-api", "persistence", "calculation-engine"]
+  scope:
+    domain:
+      - "Entity: SystemComponent(systemCode, itemCode, name, quantity, angle, length)"
+      - "ValueObject: Angle(None=0, FortyFive=45, Ninety=90)"
+      - "Abstract: Length(type, calculate)"
+      - "ValueObject: NoopLength (returns 0 for unit-measured items)"
+      - "ValueObject: DelegatedLength(formula) with lambda support"
+      - "ValueObject: LengthType(Noop, Fixed, Delegated)"
+      - "UseCase: ConfigureComponent(systemCode, itemCode, name, quantity, angle, lengthConfig)"
+      - "UseCase: UpdateComponent(id, name, quantity, angle, lengthConfig)"
+      - "UseCase: ListSystemComponents(systemCode)"
+      - "UseCase: DeleteComponent(id)"
+      - "UseCase: TestComponentCalculation(componentId, testFrame)"
+    ports:
+      driving:        # offered to outside callers
+        - "HTTP: POST /api/systems/{code}/components (OpenAPI: ../contracts/openapi/system-components.v1.yaml#/paths/~1api~1systems~1{code}~1components)"
+        - "HTTP: PUT /api/components/{id} (OpenAPI: ../contracts/openapi/system-components.v1.yaml#/paths/~1api~1components~1{id})"
+        - "HTTP: GET /api/systems/{code}/components (OpenAPI: ../contracts/openapi/system-components.v1.yaml#/paths/~1api~1systems~1{code}~1components)"
+        - "HTTP: DELETE /api/components/{id} (OpenAPI: ../contracts/openapi/system-components.v1.yaml#/paths/~1api~1components~1{id})"
+        - "HTTP: POST /api/components/{id}/test (OpenAPI: ../contracts/openapi/system-components.v1.yaml#/paths/~1api~1components~1{id}~1test)"
+      driven:         # required by domain (to be implemented by adapters)
+        - "ComponentRepositoryPort.Save(component) (Schema: ../contracts/schemas/ports/component-repository.v1.json)"
+        - "ComponentRepositoryPort.FindBySystem(systemCode) (Schema: ../contracts/schemas/ports/component-repository.v1.json)"
+        - "ComponentRepositoryPort.FindById(id) (Schema: ../contracts/schemas/ports/component-repository.v1.json)"
+        - "ComponentRepositoryPort.Delete(id) (Schema: ../contracts/schemas/ports/component-repository.v1.json)"
+        - "FormulaEnginePort.ValidateFormula(formula) (Schema: ../contracts/schemas/ports/formula-engine.v1.json)"
+        - "FormulaEnginePort.ExecuteFormula(formula, frameData) (Schema: ../contracts/schemas/ports/formula-engine.v1.json)"
+        - "SystemRepositoryPort.FindByCode(code) (integration with systems.design-system.v1)"
+        - "ItemRepositoryPort.FindByCode(code) (integration with items.manage-catalog-item.v1)"
+  nfr:
+    purity: "domain.no.framework.refs"
+    contracts: ["port.contract.declared", "port.contract.versioned"]
+    conformance: "adapter.conforms.to.port"
+    perf: "perf.p95.300ms"
+    validation: ["system.exists", "item.exists", "formula.valid", "quantity.positive"]
+  scenarios:
+    - name: configure-component-happy-path
+      given: "valid data (systemCode='WF00', itemCode='2103', formula='frame.Height', quantity=2, angle=45)"
+      when: "ConfigureComponent"
+      then:
+        - "SystemComponent created with delegated length calculation"
+        - "Formula validated by FormulaEnginePort"
+        - "ComponentRepositoryPort.Save called"
+    - name: configure-component-noop-length
+      given: "unit-measured item (like Setting Block)"
+      when: "ConfigureComponent with NoopLength"
+      then: "Component created with Length.Noop (returns 0)"
+    - name: configure-component-invalid-system
+      given: "non-existent system code"
+      when: "ConfigureComponent"
+      then: "Validation error; no side effects"
+    - name: configure-component-invalid-formula
+      given: "malformed calculation formula"
+      when: "ConfigureComponent"
+      then: "Formula validation error; no side effects"
+    - name: test-calculation-happy-path
+      given: "component with formula 'frame.Height - 4.4' and test frame (height=120)"
+      when: "TestComponentCalculation"
+      then: "Returns calculated length (115.6)"
+    - name: update-component-change-formula
+      given: "existing component and new formula"
+      when: "UpdateComponent"
+      then: "Component updated with new calculation logic"
+    - name: list-system-components
+      given: "system with configured components"
+      when: "ListSystemComponents"
+      then: "All components for system returned with calculation details"
+deliverables:
+  - "Domain entity: SystemComponent with validation and calculation logic"
+  - "Value objects: Angle enum, Length hierarchy (Abstract, NoopLength, DelegatedLength)"
+  - "Use case handlers: ConfigureComponent, UpdateComponent, ListSystemComponents, DeleteComponent, TestComponentCalculation"
+  - "Port interfaces: ComponentRepositoryPort, FormulaEnginePort"
+  - "OpenAPI spec for component endpoints (driving ports)"
+  - "Repository adapter stub: Database persistence with formula storage"
+  - "Formula engine adapter: Lambda expression evaluation (frame.Height, frame.Width-4.4, etc.)"
+  - "HTTP controller adapter: REST API with formula testing capability"
+  - "Tests: domain calculation tests, formula validation tests, integration tests with systems/items, e2e scenarios"
+  - "Validation: System/item existence, formula syntax validation, positive quantities"

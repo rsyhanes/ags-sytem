@@ -1,0 +1,72 @@
+spec:
+  id: systems.design-system.v1
+  objective: "As an engineer, I can design window/door/railing systems with categories, colors, configurations, and size constraints."
+  packs: ["domain.purity", "ports.contracts", "adapters.conformance", "web-api", "persistence"]
+  scope:
+    domain:
+      - "Entity: System(code, category, colors, configurations, sizeConstraints)"
+      - "ValueObject: Category(Window, Door, Railing)"
+      - "ValueObject: Color(Bronze, White, Anodized)"
+      - "ValueObject: SizeConstraints(minHeight, maxHeight, minWidth, maxWidth)"
+      - "UseCase: CreateSystem(code, category, colors, configurations, sizeConstraints)"
+      - "UseCase: UpdateSystem(code, category, colors, configurations, sizeConstraints)"
+      - "UseCase: ListSystems()"
+      - "UseCase: GetSystem(code)"
+    ports:
+      driving:        # offered to outside callers
+        - "HTTP: POST /api/systems (OpenAPI: ../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems)"
+        - "HTTP: PUT /api/systems/{code} (OpenAPI: ../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems~1{code})"
+        - "HTTP: GET /api/systems (OpenAPI: ../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems)"
+        - "HTTP: GET /api/systems/{code} (OpenAPI: ../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems~1{code})"
+      driven:         # required by domain (to be implemented by adapters)
+        - "SystemRepositoryPort.Save(system) (Schema: ../contracts/schemas/ports/system-repository.v1.json)"
+        - "SystemRepositoryPort.FindByCode(code) (Schema: ../contracts/schemas/ports/system-repository.v1.json)"
+        - "SystemRepositoryPort.FindAll() (Schema: ../contracts/schemas/ports/system-repository.v1.json)"
+        - "SystemRepositoryPort.FindByCategory(category) (Schema: ../contracts/schemas/ports/system-repository.v1.json)"
+  nfr:
+    purity: "domain.no.framework.refs"
+    contracts: ["port.contract.declared", "port.contract.versioned"]
+    conformance: "adapter.conforms.to.port"
+    perf: "perf.p95.250ms"
+    validation: ["system.code.unique", "size.constraints.valid", "colors.not.empty"]
+  scenarios:
+    - name: create-system-happy-path
+      given: "valid system data (code='WF00', category='Window', colors=['Bronze'], sizeConstraints=valid)"
+      when: "CreateSystem"
+      then:
+        - "System created and persisted"
+        - "SystemRepositoryPort.Save called with system"
+    - name: create-system-duplicate-code
+      given: "system with existing code"
+      when: "CreateSystem"
+      then: "Conflict error; no side effects"
+    - name: create-system-invalid-constraints
+      given: "size constraints with minHeight > maxHeight"
+      when: "CreateSystem"
+      then: "Validation error; no side effects"
+    - name: create-system-no-colors
+      given: "system with empty colors list"
+      when: "CreateSystem"
+      then: "Validation error; no side effects"
+    - name: update-system-happy-path
+      given: "existing system and valid update data"
+      when: "UpdateSystem"
+      then: "System updated and persisted"
+    - name: update-system-not-found
+      given: "non-existent system code"
+      when: "UpdateSystem"
+      then: "NotFound error; no side effects"
+    - name: list-systems-by-category
+      given: "systems exist with different categories"
+      when: "ListSystems with category filter"
+      then: "Only systems matching category returned"
+deliverables:
+  - "Domain entity: System with business validation"
+  - "Value objects: Category, Color, SizeConstraints with validation"
+  - "Use case handlers: CreateSystem, UpdateSystem, ListSystems, GetSystem"
+  - "Port interface: SystemRepositoryPort"
+  - "OpenAPI spec for systems endpoints (driving ports)"
+  - "Repository adapter stub: Database persistence layer"
+  - "HTTP controller adapter: REST API implementation"
+  - "Tests: domain entity specs, use case specs, validation tests, contract conformance tests, e2e scenarios"
+  - "Validation: Unique codes, size constraint logic, color availability"

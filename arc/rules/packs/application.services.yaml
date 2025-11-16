@@ -1,0 +1,17 @@
+id: application.services
+rules:
+- id: app.delegate-only
+  level: MUST
+  desc: Application services must delegate all behavior to domain transitions.
+- id: app.no-logic
+  level: MUST
+  desc: Do not embed business logic in application services.
+- id: app.dto-output
+  level: SHOULD
+  desc: Return DTOs or view models from service methods, not domain objects.
+- id: app.usecase-naming
+  level: SHOULD
+  desc: Use verbs and business language in service method names.
+- id: app.error-boundary
+  level: MUST
+  desc: Application layer must catch domain errors and translate them appropriately.

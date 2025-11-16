@@ -1,0 +1,110 @@
+{
+  "version": 2,
+  "dgSpecHash": "0XiRbMMV8+M=",
+  "success": false,
+  "projectFilePath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\renier\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\masstransit.abstractions\\8.2.5\\masstransit.abstractions.8.2.5.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\9.0.0\\microsoft.aspnetcore.authentication.jwtbearer.9.0.0.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.aspnetcore.openapi\\9.0.0\\microsoft.aspnetcore.openapi.9.0.0.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.csharp\\4.7.0\\microsoft.csharp.4.7.0.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.extensions.apidescription.server\\6.0.5\\microsoft.extensions.apidescription.server.6.0.5.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\6.0.0\\microsoft.extensions.dependencyinjection.abstractions.6.0.0.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.extensions.options\\6.0.0\\microsoft.extensions.options.6.0.0.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.extensions.primitives\\6.0.0\\microsoft.extensions.primitives.6.0.0.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.identitymodel.abstractions\\8.0.1\\microsoft.identitymodel.abstractions.8.0.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.identitymodel.jsonwebtokens\\8.0.1\\microsoft.identitymodel.jsonwebtokens.8.0.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.identitymodel.logging\\8.0.1\\microsoft.identitymodel.logging.8.0.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.identitymodel.protocols\\8.0.1\\microsoft.identitymodel.protocols.8.0.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.identitymodel.protocols.openidconnect\\8.0.1\\microsoft.identitymodel.protocols.openidconnect.8.0.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.identitymodel.tokens\\8.0.1\\microsoft.identitymodel.tokens.8.0.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\microsoft.openapi\\1.6.17\\microsoft.openapi.1.6.17.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\swashbuckle.aspnetcore\\6.8.1\\swashbuckle.aspnetcore.6.8.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\swashbuckle.aspnetcore.swagger\\6.8.1\\swashbuckle.aspnetcore.swagger.6.8.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\swashbuckle.aspnetcore.swaggergen\\6.8.1\\swashbuckle.aspnetcore.swaggergen.6.8.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\swashbuckle.aspnetcore.swaggerui\\6.8.1\\swashbuckle.aspnetcore.swaggerui.6.8.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\system.identitymodel.tokens.jwt\\8.0.1\\system.identitymodel.tokens.jwt.8.0.1.nupkg.sha512",
+    "C:\\Users\\renier\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Application\\AGS.WindowsAndDoors.ProductCatalog.Application.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "filePath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Application\\AGS.WindowsAndDoors.ProductCatalog.Application.csproj",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "filePath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Application\\AGS.WindowsAndDoors.ProductDesign.Application.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "filePath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Application\\AGS.WindowsAndDoors.ProductDesign.Application.csproj",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Infrastructure\\AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "filePath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Infrastructure\\AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Application\\AGS.WindowsAndDoors.OrderProcessing.Application.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "filePath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Application\\AGS.WindowsAndDoors.OrderProcessing.Application.csproj",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "filePath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    },
+    {
+      "code": "NU1104",
+      "level": "Error",
+      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\ServiceDefaults\\ServiceDefaults.csproj'. Check that the project reference is valid and that the project file exists.",
+      "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "filePath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\AGS.WindowsAndDoors.WebAPI.csproj",
+      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\ServiceDefaults\\ServiceDefaults.csproj",
+      "targetGraphs": [
+        "net9.0"
+      ]
+    }
+  ]
+}

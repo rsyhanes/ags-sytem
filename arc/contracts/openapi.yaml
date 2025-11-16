@@ -1,0 +1,1395 @@
+openapi: 3.0.3
+info:
+  title: AGS Windows & Doors API
+  description: |
+    API for managing catalog items, designing window/door systems, configuring components, 
+    calculating bills of materials, and processing customer orders.
+    
+    ## Key Features
+    - **Catalog Management**: Create and manage building component items
+    - **System Design**: Design window/door/railing systems with configurations
+    - **Component Configuration**: Link systems to items with dynamic calculations
+    - **BOM Calculation**: Real-time bill of materials generation
+    - **Order Processing**: Customer order submission and management
+    
+    ## Domain Model
+    The API follows the AGS domain model with entities: Item → SystemComponent ← System, Frame, Order
+  version: 1.0.0
+  contact:
+    name: AGS Windows & Doors
+    email: api-support@agswindows.com
+
+servers:
+  - url: https://api.agswindows.com/v1
+    description: Production server
+  - url: https://staging-api.agswindows.com/v1
+    description: Staging server
+  - url: http://localhost:8080/v1
+    description: Development server
+
+security:
+  - ApiKeyAuth: []
+  - BearerAuth: []
+
+paths:
+  # Items Management
+  /items:
+    get:
+      tags: [Items]
+      summary: List all catalog items
+      description: Retrieve all items in the catalog with optional filtering
+      parameters:
+        - name: measure
+          in: query
+          description: Filter by measurement unit
+          schema:
+            $ref: '#/components/schemas/Measure'
+        - name: search
+          in: query
+          description: Search items by name or code
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of catalog items
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Item'
+              examples:
+                catalog_items:
+                  summary: Sample catalog items
+                  value:
+                    - code: "2103"
+                      name: "Frame"
+                      measure: "Inches"
+                    - code: "0040"
+                      name: "Glass Stop"
+                      measure: "Inches"
+                    - code: "0001"
+                      name: "Setting Block"
+                      measure: "Units"
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags: [Items]
+      summary: Create new catalog item
+      description: Add a new item to the catalog
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateItemRequest'
+            examples:
+              frame_item:
+                summary: Create frame item
+                value:
+                  code: "2103"
+                  name: "Frame"
+                  measure: "Inches"
+      responses:
+        '201':
+          description: Item created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /items/{code}:
+    get:
+      tags: [Items]
+      summary: Get item by code
+      description: Retrieve a specific item by its code
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: Item code
+          schema:
+            type: string
+            example: "2103"
+      responses:
+        '200':
+          description: Item details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      tags: [Items]
+      summary: Update item
+      description: Update an existing catalog item
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: Item code
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateItemRequest'
+      responses:
+        '200':
+          description: Item updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Item'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  # Systems Management
+  /systems:
+    get:
+      tags: [Systems]
+      summary: List all systems
+      description: Retrieve all window/door/railing systems
+      parameters:
+        - name: category
+          in: query
+          description: Filter by system category
+          schema:
+            $ref: '#/components/schemas/Category'
+      responses:
+        '200':
+          description: List of systems
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/System'
+              examples:
+                systems_list:
+                  summary: Available systems
+                  value:
+                    - code: "WF00"
+                      category: "Window"
+                      colors: ["Bronze"]
+                      configurations: []
+                      sizeConstraints:
+                        minHeight: 24
+                        maxHeight: 144
+                        minWidth: 24
+                        maxWidth: 120
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags: [Systems]
+      summary: Create new system
+      description: Design a new window/door/railing system
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSystemRequest'
+            examples:
+              window_system:
+                summary: Create window system
+                value:
+                  code: "WF00"
+                  category: "Window"
+                  colors: ["Bronze"]
+                  configurations: []
+                  sizeConstraints:
+                    minHeight: 24
+                    maxHeight: 144
+                    minWidth: 24
+                    maxWidth: 120
+      responses:
+        '201':
+          description: System created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/System'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '409':
+          $ref: '#/components/responses/ConflictError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /systems/{code}:
+    get:
+      tags: [Systems]
+      summary: Get system by code
+      description: Retrieve system details including all configurations
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: System code
+          schema:
+            type: string
+            example: "WF00"
+      responses:
+        '200':
+          description: System details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/System'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    put:
+      tags: [Systems]
+      summary: Update system
+      description: Update system configuration
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: System code
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateSystemRequest'
+      responses:
+        '200':
+          description: System updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/System'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  # System Components
+  /systems/{code}/components:
+    get:
+      tags: [Components]
+      summary: List system components
+      description: Get all components configured for a system
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: System code
+          schema:
+            type: string
+            example: "WF00"
+      responses:
+        '200':
+          description: List of system components
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SystemComponent'
+              examples:
+                wf00_components:
+                  summary: WF00 system components
+                  value:
+                    - id: 1
+                      systemCode: "WF00"
+                      itemCode: "2103"
+                      name: "Frame Vertical"
+                      quantity: 2
+                      angle: 45
+                      length:
+                        type: "Delegated"
+                        formula: "frame.Height"
+                    - id: 2
+                      systemCode: "WF00"
+                      itemCode: "2103"
+                      name: "Frame Horizontal"
+                      quantity: 2
+                      angle: 45
+                      length:
+                        type: "Delegated"
+                        formula: "frame.Width"
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags: [Components]
+      summary: Add component to system
+      description: Configure a new component for a system
+      parameters:
+        - name: code
+          in: path
+          required: true
+          description: System code
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateComponentRequest'
+            examples:
+              frame_vertical:
+                summary: Add vertical frame component
+                value:
+                  itemCode: "2103"
+                  name: "Frame Vertical"
+                  quantity: 2
+                  angle: 45
+                  length:
+                    type: "Delegated"
+                    formula: "frame.Height"
+      responses:
+        '201':
+          description: Component added successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemComponent'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /components/{id}:
+    put:
+      tags: [Components]
+      summary: Update component
+      description: Update component configuration
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Component ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateComponentRequest'
+      responses:
+        '200':
+          description: Component updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SystemComponent'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    delete:
+      tags: [Components]
+      summary: Delete component
+      description: Remove component from system
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Component ID
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Component deleted successfully
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /components/{id}/test:
+    post:
+      tags: [Components]
+      summary: Test component calculation
+      description: Test component length calculation with sample frame data
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Component ID
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestFrameRequest'
+            examples:
+              test_frame:
+                summary: Test with sample frame
+                value:
+                  width: 80
+                  height: 120
+      responses:
+        '200':
+          description: Calculation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalculationTestResult'
+              examples:
+                test_result:
+                  summary: Calculation result
+                  value:
+                    componentId: 1
+                    formula: "frame.Height"
+                    inputFrame:
+                      width: 80
+                      height: 120
+                    calculatedLength: 120.00
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  # BOM Calculation
+  /calculate-bom:
+    post:
+      tags: [Calculations]
+      summary: Calculate bill of materials
+      description: Generate BOM from frame specifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CalculateBOMRequest'
+            examples:
+              wf00_frame:
+                summary: Calculate BOM for WF00 frame
+                value:
+                  systemCode: "WF00"
+                  width: 80
+                  height: 120
+                  color: "Bronze"
+                  quantity: 1
+      responses:
+        '200':
+          description: Bill of materials calculated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BOM'
+              examples:
+                wf00_bom:
+                  summary: WF00 BOM result
+                  value:
+                    frameSpec:
+                      systemCode: "WF00"
+                      width: 80
+                      height: 120
+                      color: "Bronze"
+                      quantity: 1
+                    bomLines:
+                      - itemCode: "2103"
+                        itemName: "Frame"
+                        componentName: "Frame Vertical"
+                        quantity: 2
+                        length: 120.00
+                        angle: 45
+                        measure: "Inches"
+                      - itemCode: "2103"
+                        itemName: "Frame"
+                        componentName: "Frame Horizontal"
+                        quantity: 2
+                        length: 80.00
+                        angle: 45
+                        measure: "Inches"
+                    totalItems: 2
+                    totalComponents: 4
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '422':
+          $ref: '#/components/responses/CalculationError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /validate-frame:
+    post:
+      tags: [Calculations]
+      summary: Validate frame specification
+      description: Validate frame against system constraints
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ValidateFrameRequest'
+      responses:
+        '200':
+          description: Frame specification is valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationResult'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  # Orders
+  /orders:
+    get:
+      tags: [Orders]
+      summary: List orders
+      description: Retrieve orders with optional filtering
+      parameters:
+        - name: status
+          in: query
+          description: Filter by order status
+          schema:
+            $ref: '#/components/schemas/OrderStatus'
+        - name: customerEmail
+          in: query
+          description: Filter by customer email
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Maximum number of orders to return
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: offset
+          in: query
+          description: Number of orders to skip
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrderList'
+        '500':
+          $ref: '#/components/responses/ServerError'
+    post:
+      tags: [Orders]
+      summary: Submit order
+      description: Submit a new customer order with automatic BOM calculation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrderRequest'
+            examples:
+              customer_order:
+                summary: Customer order example
+                value:
+                  customerInfo:
+                    name: "John Smith"
+                    email: "john.smith@email.com"
+                    phone: "+1-555-0123"
+                    address:
+                      street: "123 Main Street"
+                      city: "Springfield"
+                      state: "IL"
+                      zipCode: "62701"
+                      country: "USA"
+                  frameSpec:
+                    systemCode: "WF00"
+                    width: 80
+                    height: 120
+                    color: "Bronze"
+                    quantity: 1
+      responses:
+        '201':
+          description: Order submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '422':
+          $ref: '#/components/responses/CalculationError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /orders/{id}:
+    get:
+      tags: [Orders]
+      summary: Get order details
+      description: Retrieve complete order information including BOM
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Order ID
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Order details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+  /orders/{id}/status:
+    put:
+      tags: [Orders]
+      summary: Update order status
+      description: Update the status of an existing order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Order ID
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateOrderStatusRequest'
+            examples:
+              confirm_order:
+                summary: Confirm order
+                value:
+                  status: "Confirmed"
+      responses:
+        '200':
+          description: Order status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Order'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/ServerError'
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    # Enums
+    Measure:
+      type: string
+      enum: [Units, Inches]
+      description: Unit of measurement for items
+
+    Category:
+      type: string
+      enum: [Window, Door, Railing]
+      description: Product category
+
+    Color:
+      type: string
+      enum: [Bronze, White, Anodized]
+      description: Available colors
+
+    Angle:
+      type: integer
+      enum: [0, 45, 90]
+      description: Cutting angle in degrees
+
+    LengthType:
+      type: string
+      enum: [Noop, Fixed, Delegated]
+      description: Type of length calculation
+
+    OrderStatus:
+      type: string
+      enum: [New, Confirmed, InProduction, Completed, Cancelled]
+      description: Order processing status
+
+    # Core Entities
+    Item:
+      type: object
+      required: [code, name, measure]
+      properties:
+        code:
+          type: string
+          description: Unique item identifier
+          example: "2103"
+        name:
+          type: string
+          description: Human-readable item name
+          example: "Frame"
+        measure:
+          $ref: '#/components/schemas/Measure'
+      example:
+        code: "2103"
+        name: "Frame"
+        measure: "Inches"
+
+    SizeConstraints:
+      type: object
+      required: [minHeight, maxHeight, minWidth, maxWidth]
+      properties:
+        minHeight:
+          type: number
+          format: double
+          minimum: 0
+          description: Minimum allowable height
+          example: 24.0
+        maxHeight:
+          type: number
+          format: double
+          minimum: 0
+          description: Maximum allowable height
+          example: 144.0
+        minWidth:
+          type: number
+          format: double
+          minimum: 0
+          description: Minimum allowable width
+          example: 24.0
+        maxWidth:
+          type: number
+          format: double
+          minimum: 0
+          description: Maximum allowable width
+          example: 120.0
+
+    System:
+      type: object
+      required: [code, category, colors, configurations]
+      properties:
+        code:
+          type: string
+          description: Unique system identifier
+          example: "WF00"
+        category:
+          $ref: '#/components/schemas/Category'
+        colors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Color'
+          minItems: 1
+          description: Available color options
+          example: ["Bronze"]
+        configurations:
+          type: array
+          items:
+            type: string
+          description: Available configuration options
+          example: []
+        sizeConstraints:
+          $ref: '#/components/schemas/SizeConstraints'
+      example:
+        code: "WF00"
+        category: "Window"
+        colors: ["Bronze"]
+        configurations: []
+        sizeConstraints:
+          minHeight: 24.0
+          maxHeight: 144.0
+          minWidth: 24.0
+          maxWidth: 120.0
+
+    LengthCalculation:
+      type: object
+      required: [type]
+      properties:
+        type:
+          $ref: '#/components/schemas/LengthType'
+        formula:
+          type: string
+          description: Calculation formula (required for Delegated type)
+          example: "frame.Height - 4.4"
+        value:
+          type: number
+          format: double
+          description: Fixed value (required for Fixed type)
+      discriminator:
+        propertyName: type
+        mapping:
+          Noop: '#/components/schemas/NoopLength'
+          Fixed: '#/components/schemas/FixedLength'
+          Delegated: '#/components/schemas/DelegatedLength'
+
+    NoopLength:
+      allOf:
+        - $ref: '#/components/schemas/LengthCalculation'
+        - type: object
+          properties:
+            type:
+              type: string
+              enum: [Noop]
+
+    FixedLength:
+      allOf:
+        - $ref: '#/components/schemas/LengthCalculation'
+        - type: object
+          required: [value]
+          properties:
+            type:
+              type: string
+              enum: [Fixed]
+
+    DelegatedLength:
+      allOf:
+        - $ref: '#/components/schemas/LengthCalculation'
+        - type: object
+          required: [formula]
+          properties:
+            type:
+              type: string
+              enum: [Delegated]
+
+    SystemComponent:
+      type: object
+      required: [id, systemCode, itemCode, name, quantity, angle, length]
+      properties:
+        id:
+          type: integer
+          description: Component identifier
+          example: 1
+        systemCode:
+          type: string
+          description: Reference to system code
+          example: "WF00"
+        itemCode:
+          type: string
+          description: Reference to item code
+          example: "2103"
+        name:
+          type: string
+          description: Component name
+          example: "Frame Vertical"
+        quantity:
+          type: number
+          format: double
+          minimum: 0
+          description: Quantity of this item per frame
+          example: 2
+        angle:
+          $ref: '#/components/schemas/Angle'
+        length:
+          $ref: '#/components/schemas/LengthCalculation'
+
+    Frame:
+      type: object
+      required: [systemCode, width, height, color, quantity]
+      properties:
+        systemCode:
+          type: string
+          description: System to be built
+          example: "WF00"
+        width:
+          type: number
+          format: double
+          minimum: 0
+          description: Frame width
+          example: 80.0
+        height:
+          type: number
+          format: double
+          minimum: 0
+          description: Frame height
+          example: 120.0
+        color:
+          $ref: '#/components/schemas/Color'
+        quantity:
+          type: integer
+          minimum: 1
+          description: Number of frames
+          example: 1
+
+    BOMLine:
+      type: object
+      required: [itemCode, itemName, componentName, quantity, length, angle, measure]
+      properties:
+        itemCode:
+          type: string
+          description: Item code
+          example: "2103"
+        itemName:
+          type: string
+          description: Item name
+          example: "Frame"
+        componentName:
+          type: string
+          description: Component name
+          example: "Frame Vertical"
+        quantity:
+          type: number
+          format: double
+          minimum: 0
+          description: Total quantity needed
+          example: 2
+        length:
+          type: number
+          format: double
+          minimum: 0
+          description: Calculated length
+          example: 120.00
+        angle:
+          $ref: '#/components/schemas/Angle'
+        measure:
+          $ref: '#/components/schemas/Measure'
+
+    BOM:
+      type: object
+      required: [frameSpec, bomLines, totalItems, totalComponents]
+      properties:
+        frameSpec:
+          $ref: '#/components/schemas/Frame'
+        bomLines:
+          type: array
+          items:
+            $ref: '#/components/schemas/BOMLine'
+          description: Calculated component requirements
+        totalItems:
+          type: integer
+          description: Total number of unique items
+          example: 2
+        totalComponents:
+          type: integer
+          description: Total number of components
+          example: 4
+
+    Address:
+      type: object
+      required: [street, city, state, zipCode, country]
+      properties:
+        street:
+          type: string
+          example: "123 Main Street"
+        city:
+          type: string
+          example: "Springfield"
+        state:
+          type: string
+          example: "IL"
+        zipCode:
+          type: string
+          example: "62701"
+        country:
+          type: string
+          example: "USA"
+
+    CustomerInfo:
+      type: object
+      required: [name, email]
+      properties:
+        name:
+          type: string
+          description: Customer name
+          example: "John Smith"
+        email:
+          type: string
+          format: email
+          description: Customer email
+          example: "john.smith@email.com"
+        phone:
+          type: string
+          description: Customer phone number
+          example: "+1-555-0123"
+        address:
+          $ref: '#/components/schemas/Address'
+
+    Order:
+      type: object
+      required: [id, customerInfo, frameSpec, calculatedBOM, status, submittedAt]
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Order identifier
+        customerInfo:
+          $ref: '#/components/schemas/CustomerInfo'
+        frameSpec:
+          $ref: '#/components/schemas/Frame'
+        calculatedBOM:
+          $ref: '#/components/schemas/BOM'
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+        submittedAt:
+          type: string
+          format: date-time
+          description: Order submission timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+
+    OrderList:
+      type: object
+      required: [orders, pagination]
+      properties:
+        orders:
+          type: array
+          items:
+            type: object
+            required: [id, customerName, status, submittedAt]
+            properties:
+              id:
+                type: string
+                format: uuid
+              customerName:
+                type: string
+              customerEmail:
+                type: string
+                format: email
+              status:
+                $ref: '#/components/schemas/OrderStatus'
+              submittedAt:
+                type: string
+                format: date-time
+              frameSystem:
+                type: string
+                example: "WF00"
+        pagination:
+          type: object
+          required: [offset, limit, total]
+          properties:
+            offset:
+              type: integer
+            limit:
+              type: integer
+            total:
+              type: integer
+
+    # Request/Response Objects
+    CreateItemRequest:
+      type: object
+      required: [code, name, measure]
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        measure:
+          $ref: '#/components/schemas/Measure'
+
+    UpdateItemRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        measure:
+          $ref: '#/components/schemas/Measure'
+
+    CreateSystemRequest:
+      type: object
+      required: [code, category, colors, configurations]
+      properties:
+        code:
+          type: string
+        category:
+          $ref: '#/components/schemas/Category'
+        colors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Color'
+          minItems: 1
+        configurations:
+          type: array
+          items:
+            type: string
+        sizeConstraints:
+          $ref: '#/components/schemas/SizeConstraints'
+
+    UpdateSystemRequest:
+      type: object
+      properties:
+        category:
+          $ref: '#/components/schemas/Category'
+        colors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Color'
+          minItems: 1
+        configurations:
+          type: array
+          items:
+            type: string
+        sizeConstraints:
+          $ref: '#/components/schemas/SizeConstraints'
+
+    CreateComponentRequest:
+      type: object
+      required: [itemCode, name, quantity, angle, length]
+      properties:
+        itemCode:
+          type: string
+        name:
+          type: string
+        quantity:
+          type: number
+          format: double
+          minimum: 0
+        angle:
+          $ref: '#/components/schemas/Angle'
+        length:
+          $ref: '#/components/schemas/LengthCalculation'
+
+    UpdateComponentRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        quantity:
+          type: number
+          format: double
+          minimum: 0
+        angle:
+          $ref: '#/components/schemas/Angle'
+        length:
+          $ref: '#/components/schemas/LengthCalculation'
+
+    TestFrameRequest:
+      type: object
+      required: [width, height]
+      properties:
+        width:
+          type: number
+          format: double
+          minimum: 0
+        height:
+          type: number
+          format: double
+          minimum: 0
+
+    CalculationTestResult:
+      type: object
+      required: [componentId, formula, inputFrame, calculatedLength]
+      properties:
+        componentId:
+          type: integer
+        formula:
+          type: string
+        inputFrame:
+          $ref: '#/components/schemas/TestFrameRequest'
+        calculatedLength:
+          type: number
+          format: double
+
+    CalculateBOMRequest:
+      allOf:
+        - $ref: '#/components/schemas/Frame'
+
+    ValidateFrameRequest:
+      allOf:
+        - $ref: '#/components/schemas/Frame'
+
+    ValidationResult:
+      type: object
+      required: [valid]
+      properties:
+        valid:
+          type: boolean
+          description: Whether the frame specification is valid
+        violations:
+          type: array
+          items:
+            type: object
+            required: [field, message]
+            properties:
+              field:
+                type: string
+                description: Field that failed validation
+              message:
+                type: string
+                description: Validation error message
+          description: List of validation violations (empty if valid)
+      example:
+        valid: false
+        violations:
+          - field: "width"
+            message: "Width 150 exceeds maximum allowed width of 120"
+          - field: "color"
+            message: "Color 'Green' is not available for system WF00"
+
+    CreateOrderRequest:
+      type: object
+      required: [customerInfo, frameSpec]
+      properties:
+        customerInfo:
+          $ref: '#/components/schemas/CustomerInfo'
+        frameSpec:
+          $ref: '#/components/schemas/Frame'
+
+    UpdateOrderStatusRequest:
+      type: object
+      required: [status]
+      properties:
+        status:
+          $ref: '#/components/schemas/OrderStatus'
+
+    # Error Response Objects
+    ErrorResponse:
+      type: object
+      required: [error, message, timestamp]
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Validation failed for one or more fields"
+        timestamp:
+          type: string
+          format: date-time
+          description: Error timestamp
+        details:
+          type: object
+          description: Additional error details
+        violations:
+          type: array
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+              message:
+                type: string
+          description: Field-specific validation errors
+
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            validation_error:
+              summary: Validation error example
+              value:
+                error: "VALIDATION_ERROR"
+                message: "Validation failed for one or more fields"
+                timestamp: "2023-11-09T18:30:00Z"
+                violations:
+                  - field: "code"
+                    message: "Item code is required"
+                  - field: "measure"
+                    message: "Invalid measurement unit"
+
+    ConflictError:
+      description: Resource conflict error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            conflict_error:
+              summary: Duplicate resource error
+              value:
+                error: "CONFLICT_ERROR"
+                message: "Item with code '2103' already exists"
+                timestamp: "2023-11-09T18:30:00Z"
+
+    NotFoundError:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            not_found_error:
+              summary: Resource not found error
+              value:
+                error: "NOT_FOUND"
+                message: "System with code 'XYZ123' not found"
+                timestamp: "2023-11-09T18:30:00Z"
+
+    CalculationError:
+      description: Calculation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            calculation_error:
+              summary: BOM calculation error
+              value:
+                error: "CALCULATION_ERROR"
+                message: "Failed to calculate BOM due to invalid formula in component 'Frame Vertical'"
+                timestamp: "2023-11-09T18:30:00Z"
+                details:
+                  componentId: 1
+                  formula: "frame.Invalid"
+
+    ServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          examples:
+            server_error:
+              summary: Internal server error
+              value:
+                error: "INTERNAL_ERROR"
+                message: "An unexpected error occurred"
+                timestamp: "2023-11-09T18:30:00Z"
+
+tags:
+  - name: Items
+    description: Catalog item management operations
+  - name: Systems
+    description: Window/door/railing system design operations
+  - name: Components
+    description: System component configuration operations
+  - name: Calculations
+    description: BOM calculation and frame validation operations
+  - name: Orders
+    description: Customer order processing operations

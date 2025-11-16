@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v9.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v9.0": {
+      "AGS.WindowsAndDoors.OrderProcessing.Domain/1.0.0": {
+        "dependencies": {
+          "AGS.WindowsAndDoors.SharedKernel": "1.0.0"
+        },
+        "runtime": {
+          "AGS.WindowsAndDoors.OrderProcessing.Domain.dll": {}
+        }
+      },
+      "AGS.WindowsAndDoors.SharedKernel/1.0.0": {
+        "runtime": {
+          "AGS.WindowsAndDoors.SharedKernel.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "AGS.WindowsAndDoors.OrderProcessing.Domain/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "AGS.WindowsAndDoors.SharedKernel/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

@@ -1,0 +1,87 @@
+spec:
+  id: orders.submit-order.v1
+  objective: "As a customer, I can submit orders for frames with automatically calculated bill of materials and receive order confirmation."
+  packs: ["domain.purity", "ports.contracts", "adapters.conformance", "web-api", "persistence", "messaging"]
+  scope:
+    domain:
+      - "Entity: Order(id, customerInfo, frameSpec, calculatedBOM, status, submittedAt)"
+      - "ValueObject: CustomerInfo(name, email, phone, address)"
+      - "ValueObject: OrderStatus(New, Confirmed, InProduction, Completed, Cancelled)"
+      - "UseCase: SubmitOrder(customerInfo, frameSpec)"
+      - "UseCase: GetOrder(orderId)"
+      - "UseCase: ListOrders(filters)"
+      - "UseCase: UpdateOrderStatus(orderId, status)"
+      - "Domain Event: OrderSubmitted(orderId, customerInfo, total)"
+    ports:
+      driving:        # offered to outside callers
+        - "HTTP: POST /api/orders (OpenAPI: ../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders)"
+        - "HTTP: GET /api/orders/{id} (OpenAPI: ../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders~1{id})"
+        - "HTTP: GET /api/orders (OpenAPI: ../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders)"
+        - "HTTP: PUT /api/orders/{id}/status (OpenAPI: ../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders~1{id}~1status)"
+      driven:         # required by domain (to be implemented by adapters)
+        - "OrderRepositoryPort.Save(order) (Schema: ../contracts/schemas/ports/order-repository.v1.json)"
+        - "OrderRepositoryPort.FindById(id) (Schema: ../contracts/schemas/ports/order-repository.v1.json)"
+        - "OrderRepositoryPort.FindAll(filters) (Schema: ../contracts/schemas/ports/order-repository.v1.json)"
+        - "BOMCalculationPort.CalculateBOM(frameSpec) (integration with orders.calculate-bom.v1)"
+        - "NotificationPort.SendOrderConfirmation(customerInfo, order) (Schema: ../contracts/schemas/ports/notification.v1.json)"
+        - "EventPublisherPort.PublishEvent(orderSubmitted) (Schema: ../contracts/schemas/ports/events.v1.json)"
+  nfr:
+    purity: "domain.no.framework.refs"
+    contracts: ["port.contract.declared", "port.contract.versioned"]
+    conformance: "adapter.conforms.to.port"
+    perf: "perf.p95.800ms"
+    reliability: "order.persistence.guaranteed"
+    validation: ["customer.info.complete", "frame.spec.valid", "bom.calculated.successfully"]
+  scenarios:
+    - name: submit-order-happy-path
+      given: "valid customer info and frame spec (system='WF00', width=80, height=120)"
+      when: "SubmitOrder"
+      then:
+        - "BOM calculated for frame specification"
+        - "Order created with status=New and calculated BOM"
+        - "Order persisted to database"
+        - "OrderSubmitted event published"
+        - "Confirmation notification sent to customer"
+        - "Order ID returned to customer"
+    - name: submit-order-invalid-frame
+      given: "invalid frame specification"
+      when: "SubmitOrder"
+      then: "Validation error; no order created; no side effects"
+    - name: submit-order-incomplete-customer-info
+      given: "missing required customer information (email, name)"
+      when: "SubmitOrder"
+      then: "Validation error; no order created"
+    - name: submit-order-bom-calculation-fails
+      given: "valid inputs but BOM calculation error"
+      when: "SubmitOrder"
+      then: "Calculation error; no order created; error details returned"
+    - name: get-order-happy-path
+      given: "existing order ID"
+      when: "GetOrder"
+      then: "Complete order details returned including customer info, frame spec, and BOM"
+    - name: get-order-not-found
+      given: "non-existent order ID"
+      when: "GetOrder"
+      then: "NotFound error"
+    - name: list-orders-admin
+      given: "admin user requesting order list"
+      when: "ListOrders"
+      then: "All orders returned with summary information"
+    - name: update-order-status-happy-path
+      given: "valid order ID and new status"
+      when: "UpdateOrderStatus"
+      then: "Order status updated; status change event published"
+deliverables:
+  - "Domain entity: Order with business validation and status management"
+  - "Value objects: CustomerInfo, OrderStatus with validation rules"
+  - "Use case handlers: SubmitOrder, GetOrder, ListOrders, UpdateOrderStatus"
+  - "Port interfaces: OrderRepositoryPort, NotificationPort, EventPublisherPort"
+  - "Domain events: OrderSubmitted with customer and order details"
+  - "OpenAPI spec for order management endpoints (driving ports)"
+  - "Repository adapter stub: Database persistence for orders"
+  - "Notification adapter stub: Email/SMS confirmation system"
+  - "Event publisher adapter stub: Event bus integration"
+  - "HTTP controller adapter: REST API with order management"
+  - "Tests: domain order tests, integration tests with BOM calculation, event publishing tests, e2e order flow"
+  - "Validation: Customer information completeness, frame specification validation, BOM calculation success"
+  - "Error handling: Comprehensive error messages for validation and calculation failures"
