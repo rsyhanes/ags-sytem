@@ -1,0 +1,38 @@
+id: testing.unit.autofixture
+rules:
+- id: testing.fixture.per-test
+  level: MUST
+  desc: Each unit test that uses mocks MUST initialize a new Fixture instance to ensure
+    isolation.
+- id: testing.fixture.auto-nsubstitute
+  level: MUST
+  desc: Use AutoNSubstituteCustomization with Fixture when mocking is required.
+- id: testing.fixture.reusable-customization
+  level: SHOULD
+  desc: Extract repeated customization setup into a separate Customization class and
+    apply it via fixture.Customize.
+- id: testing.fixture.nontrivial-type
+  level: SHOULD
+  desc: Encapsulate construction logic for non-trivial types into a Customization
+    class for reuse and clarity.
+- id: testing.fixture.default-behaviors
+  level: SHOULD
+  desc: Encapsulate default Fixture configurations in a customization and apply consistently
+    to avoid duplication across tests.
+- id: testing.fixture.helper-default
+  level: MUST
+  desc: Use FixtureHelper.WithDefaultCustomizations() to initialize fixtures with AutoNSubstituteCustomization
+    for all tests requiring dependency injection or mocking.
+- id: testing.fixture.helper-customizations
+  level: SHOULD
+  desc: Use FixtureHelper.WithCustomizations() when applying additional ICustomization instances
+    beyond the default AutoNSubstitute setup.
+- id: testing.fixture.type-relay-infrastructure
+  level: SHOULD
+  desc: Use TypeRelayCustomization<TInterface, TMock> for infrastructure port mocking when
+    specific mock implementations with predefined behaviors are needed, rather than generic NSubstitute mocks.
+- id: testing.fixture.helper-consistency
+  level: MUST
+  desc: All test projects MUST reference AGS.WindowsAndDoors.SharedKernel.Testing and use
+    FixtureHelper.WithDefaultCustomizations() and WithCustomizations() extension methods
+    to ensure consistent AutoFixture usage patterns.

@@ -1120,13 +1120,6 @@
   "projectFileDependencyGroups": {
     "net9.0": [
       "AutoMapper.Extensions.Microsoft.DependencyInjection >= 12.0.1",
-      "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Application\\AGS.WindowsAndDoors.OrderProcessing.Application.csproj",
-      "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj",
-      "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Application\\AGS.WindowsAndDoors.ProductCatalog.Application.csproj",
-      "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj",
-      "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Application\\AGS.WindowsAndDoors.ProductDesign.Application.csproj",
-      "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Infrastructure\\AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj",
-      "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\ServiceDefaults\\ServiceDefaults.csproj",
       "MassTransit.Abstractions >= 8.2.5",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 9.0.0",
       "Microsoft.AspNetCore.OpenApi >= 9.0.0",
@@ -1135,7 +1128,7 @@
   },
   "packageFolders": {
     "C:\\Users\\renier\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet": {}
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
@@ -1147,7 +1140,7 @@
       "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet"
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
         "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -1165,29 +1158,7 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
-          "projectReferences": {
-            "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Application\\AGS.WindowsAndDoors.OrderProcessing.Application.csproj": {
-              "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Application\\AGS.WindowsAndDoors.OrderProcessing.Application.csproj"
-            },
-            "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj": {
-              "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj"
-            },
-            "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Application\\AGS.WindowsAndDoors.ProductCatalog.Application.csproj": {
-              "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Application\\AGS.WindowsAndDoors.ProductCatalog.Application.csproj"
-            },
-            "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj": {
-              "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj"
-            },
-            "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Application\\AGS.WindowsAndDoors.ProductDesign.Application.csproj": {
-              "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Application\\AGS.WindowsAndDoors.ProductDesign.Application.csproj"
-            },
-            "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Infrastructure\\AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj": {
-              "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Infrastructure\\AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj"
-            },
-            "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\ServiceDefaults\\ServiceDefaults.csproj": {
-              "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\ServiceDefaults\\ServiceDefaults.csproj"
-            }
-          }
+          "projectReferences": {}
         }
       },
       "warningProperties": {
@@ -1249,70 +1220,5 @@
         "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.301/PortableRuntimeIdentifierGraph.json"
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Application\\AGS.WindowsAndDoors.ProductCatalog.Application.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Application\\AGS.WindowsAndDoors.ProductCatalog.Application.csproj",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    },
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    },
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Application\\AGS.WindowsAndDoors.ProductDesign.Application.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Application\\AGS.WindowsAndDoors.ProductDesign.Application.csproj",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    },
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Infrastructure\\AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Infrastructure\\AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    },
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Application\\AGS.WindowsAndDoors.OrderProcessing.Application.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Application\\AGS.WindowsAndDoors.OrderProcessing.Application.csproj",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    },
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    },
-    {
-      "code": "NU1104",
-      "level": "Error",
-      "message": "Unable to find project 'D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\ServiceDefaults\\ServiceDefaults.csproj'. Check that the project reference is valid and that the project file exists.",
-      "libraryId": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\ServiceDefaults\\ServiceDefaults.csproj",
-      "targetGraphs": [
-        "net9.0"
-      ]
-    }
-  ]
+  }
 }

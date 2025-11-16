@@ -6,6 +6,8 @@ D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\AppHost.pdb
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Aspire.Hosting.dll
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Aspire.Hosting.AppHost.dll
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Aspire.Hosting.NodeJs.dll
+D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Aspire.Hosting.PostgreSQL.dll
+D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\HealthChecks.NpgSql.dll
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\HealthChecks.Uris.dll
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Fractions.dll
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Google.Protobuf.dll
@@ -57,6 +59,7 @@ D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Microsoft.Vi
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Microsoft.VisualStudio.Validation.dll
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Nerdbank.Streams.dll
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Newtonsoft.Json.dll
+D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Npgsql.dll
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Polly.Core.dll
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Semver.dll
 D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\StreamJsonRpc.dll
@@ -121,6 +124,7 @@ D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\AppHost.Gene
 D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\AppHost.AssemblyInfoInputs.cache
 D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\AppHost.AssemblyInfo.cs
 D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\AppHost.csproj.CoreCompileInputs.cache
+D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\Aspire\references\AGS_WindowsAndDoors_WebAPI.ProjectMetadata.g.cs
 D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\Aspire\references\_AppHost.ProjectMetadata.g.cs
 D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\AppHost.csproj.Up2Date
 D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\AppHost.dll
@@ -128,7 +132,3 @@ D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\refint\AppHo
 D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\AppHost.pdb
 D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\AppHost.genruntimeconfig.cache
 D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\ref\AppHost.dll
-D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Aspire.Hosting.PostgreSQL.dll
-D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\HealthChecks.NpgSql.dll
-D:\Source\AGS Windows And Doors\system\src\AppHost\bin\Debug\net9.0\Npgsql.dll
-D:\Source\AGS Windows And Doors\system\src\AppHost\obj\Debug\net9.0\Aspire\references\AGS_WindowsAndDoors_WebAPI.ProjectMetadata.g.cs

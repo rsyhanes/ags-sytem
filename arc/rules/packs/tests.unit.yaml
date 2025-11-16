@@ -2,7 +2,8 @@ id: tests.unit
 rules:
 - id: tests.setup
   level: MUST
-  desc: Use AutoFixture for test setup
+  desc: Use AutoFixture for test setup with FixtureHelper.WithDefaultCustomizations() for consistent
+    mocking and fixture initialization
 - id: tests.mocks
   level: MUST
   desc: Use NSubstitute as mocking library

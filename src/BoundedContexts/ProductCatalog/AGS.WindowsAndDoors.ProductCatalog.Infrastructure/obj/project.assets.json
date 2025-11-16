@@ -5033,7 +5033,7 @@
   },
   "packageFolders": {
     "C:\\Users\\renier\\.nuget\\packages\\": {},
-    "C:\\Microsoft\\Xamarin\\NuGet": {}
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
@@ -5045,7 +5045,7 @@
       "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
-        "C:\\Microsoft\\Xamarin\\NuGet"
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
       ],
       "configFilePaths": [
         "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",

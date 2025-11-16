@@ -14,14 +14,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="../../BoundedContexts/ProductCatalog/AGS.WindowsAndDoors.ProductCatalog.Application/AGS.WindowsAndDoors.ProductCatalog.Application.csproj" />
-    <ProjectReference Include="../../BoundedContexts/ProductCatalog/AGS.WindowsAndDoors.ProductCatalog.Infrastructure/AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj" />
-    <ProjectReference Include="../../BoundedContexts/ProductDesign/AGS.WindowsAndDoors.ProductDesign.Application/AGS.WindowsAndDoors.ProductDesign.Application.csproj" />
-    <ProjectReference Include="../../BoundedContexts/ProductDesign/AGS.WindowsAndDoors.ProductDesign.Infrastructure/AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj" />
-    <ProjectReference Include="../../BoundedContexts/OrderProcessing/AGS.WindowsAndDoors.OrderProcessing.Application/AGS.WindowsAndDoors.OrderProcessing.Application.csproj" />
-    <ProjectReference Include="../../BoundedContexts/OrderProcessing/AGS.WindowsAndDoors.OrderProcessing.Infrastructure/AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj" />
-    <ProjectReference Include="../../ServiceDefaults/ServiceDefaults.csproj" />
-  </ItemGroup>
-
 </Project>

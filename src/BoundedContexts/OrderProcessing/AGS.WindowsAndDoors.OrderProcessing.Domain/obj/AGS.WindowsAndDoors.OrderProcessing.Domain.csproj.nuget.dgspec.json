@@ -14,7 +14,7 @@
         "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -84,7 +84,7 @@
         "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\SharedKernel\\AGS.WindowsAndDoors.SharedKernel\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",

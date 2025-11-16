@@ -7,5 +7,5 @@ namespace Projects;
 [global::System.Diagnostics.DebuggerDisplay("Type = {GetType().Name,nq}, ProjectPath = {ProjectPath}")]
 public class AGS_WindowsAndDoors_WebAPI : global::Aspire.Hosting.IProjectMetadata
 {
-    public string ProjectPath => """d:\Source\AGS Windows And Doors\system\src\Presentation\Backend\AGS.WindowsAndDoors.WebAPI\AGS.WindowsAndDoors.WebAPI.csproj""";
+    public string ProjectPath => """D:\Source\AGS Windows And Doors\system\src\Presentation\Backend\AGS.WindowsAndDoors.WebAPI\AGS.WindowsAndDoors.WebAPI.csproj""";
 }

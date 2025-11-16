@@ -14,7 +14,7 @@
         "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\Backend\\AGS.WindowsAndDoors.WebAPI\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -32,29 +32,7 @@
         "frameworks": {
           "net9.0": {
             "targetAlias": "net9.0",
-            "projectReferences": {
-              "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Application\\AGS.WindowsAndDoors.OrderProcessing.Application.csproj": {
-                "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Application\\AGS.WindowsAndDoors.OrderProcessing.Application.csproj"
-              },
-              "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj": {
-                "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\OrderProcessing\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure\\AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj"
-              },
-              "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Application\\AGS.WindowsAndDoors.ProductCatalog.Application.csproj": {
-                "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Application\\AGS.WindowsAndDoors.ProductCatalog.Application.csproj"
-              },
-              "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj": {
-                "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductCatalog\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj"
-              },
-              "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Application\\AGS.WindowsAndDoors.ProductDesign.Application.csproj": {
-                "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Application\\AGS.WindowsAndDoors.ProductDesign.Application.csproj"
-              },
-              "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Infrastructure\\AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj": {
-                "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Infrastructure\\AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj"
-              },
-              "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\ServiceDefaults\\ServiceDefaults.csproj": {
-                "projectPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\Presentation\\ServiceDefaults\\ServiceDefaults.csproj"
-              }
-            }
+            "projectReferences": {}
           }
         },
         "warningProperties": {

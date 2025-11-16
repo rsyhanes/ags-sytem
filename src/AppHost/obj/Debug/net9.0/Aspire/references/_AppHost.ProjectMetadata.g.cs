@@ -8,5 +8,5 @@ namespace Projects;
 public class AppHost
 {
     private AppHost() { }
-    public static string ProjectPath => """d:\Source\AGS Windows And Doors\system\src\AppHost""";
+    public static string ProjectPath => """D:\Source\AGS Windows And Doors\system\src\AppHost""";
 }

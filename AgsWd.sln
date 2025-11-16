@@ -1,165 +1,142 @@
-﻿Microsoft Visual Studio Solution File, Format Version 12.00
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-
-# =============================================================================
-# ROOT SOLUTION FOLDER
-# =============================================================================
-
-# =============================================================================
-# INFRASTRUCTURE PROJECTS
-# =============================================================================
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppHost", "src\AppHost\AppHost.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedKernel", "SharedKernel", "{FAF2C088-2806-4B9D-A696-C88D784447B4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceDefaults", "src\ServiceDefaults\ServiceDefaults.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BoundedContexts", "BoundedContexts", "{0C735ACB-D402-40C7-8F9B-0485E8C6F3DC}"
 EndProject
-
-# =============================================================================
-# SHARED KERNEL
-# =============================================================================
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SharedKernel", "SharedKernel", "{00000000-0000-0000-0000-000000000000}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductCatalog", "ProductCatalog", "{94991510-2CE2-4F5A-8E0A-D1979D36D7A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.SharedKernel", "src\SharedKernel\AGS.WindowsAndDoors.SharedKernel\AGS.WindowsAndDoors.SharedKernel.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductCatalog.Domain", "src\BoundedContexts\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Domain\AGS.WindowsAndDoors.ProductCatalog.Domain.csproj", "{65CAF07D-A132-4AF1-8089-9CE3FDBE92A6}"
 EndProject
-
-# =============================================================================
-# BOUNDED CONTEXTS
-# =============================================================================
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BoundedContexts", "BoundedContexts", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductCatalog.Application", "src\BoundedContexts\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Application\AGS.WindowsAndDoors.ProductCatalog.Application.csproj", "{76449D28-0C29-46A8-A22F-C9DC6E83978B}"
 EndProject
-
-# ProductCatalog Bounded Context
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductCatalog", "ProductCatalog", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductCatalog.Infrastructure", "src\BoundedContexts\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj", "{02A5D7AA-28B5-45AE-9F01-9ABF5F56220A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductCatalog.Domain", "src\BoundedContexts\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Domain\AGS.WindowsAndDoors.ProductCatalog.Domain.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductCatalog.Tests", "src\BoundedContexts\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Tests\AGS.WindowsAndDoors.ProductCatalog.Tests.csproj", "{479711FC-D4B1-4033-B6CA-44B36EC36606}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductCatalog.Application", "src\BoundedContexts\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Application\AGS.WindowsAndDoors.ProductCatalog.Application.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductDesign", "ProductDesign", "{8520EBA5-6EFB-4420-9A86-E42C0BE2C89C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductCatalog.Infrastructure", "src\BoundedContexts\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.SharedKernel", "src\SharedKernel\AGS.WindowsAndDoors.SharedKernel\AGS.WindowsAndDoors.SharedKernel.csproj", "{32252427-2293-45AA-ABDA-C20B0F83E59D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductCatalog.Tests", "src\BoundedContexts\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Tests\AGS.WindowsAndDoors.ProductCatalog.Tests.csproj", "{F7A8B9C0-1D2E-3F4A-5B6C-7D8E9F0A1B2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductDesign.Domain", "src\BoundedContexts\ProductDesign\AGS.WindowsAndDoors.ProductDesign.Domain\AGS.WindowsAndDoors.ProductDesign.Domain.csproj", "{41992E0A-B24C-428E-904E-1F03B6477CA0}"
 EndProject
-
-# ProductDesign Bounded Context
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ProductDesign", "ProductDesign", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductDesign.Application", "src\BoundedContexts\ProductDesign\AGS.WindowsAndDoors.ProductDesign.Application\AGS.WindowsAndDoors.ProductDesign.Application.csproj", "{840BECD0-29BC-4CD0-AD53-8EAAC0F7C3CA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductDesign.Domain", "src\BoundedContexts\ProductDesign\AGS.WindowsAndDoors.ProductDesign.Domain\AGS.WindowsAndDoors.ProductDesign.Domain.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductDesign.Infrastructure", "src\BoundedContexts\ProductDesign\AGS.WindowsAndDoors.ProductDesign.Infrastructure\AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj", "{0E9C957E-E3E9-4CEB-AE84-FA132D2B5DFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductDesign.Application", "src\BoundedContexts\ProductDesign\AGS.WindowsAndDoors.ProductDesign.Application\AGS.WindowsAndDoors.ProductDesign.Application.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderProcessing", "OrderProcessing", "{6DCED9DD-EE59-48A2-A746-46125448FFFD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.ProductDesign.Infrastructure", "src\BoundedContexts\ProductDesign\AGS.WindowsAndDoors.ProductDesign.Infrastructure\AGS.WindowsAndDoors.ProductDesign.Infrastructure.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.OrderProcessing.Domain", "src\BoundedContexts\OrderProcessing\AGS.WindowsAndDoors.OrderProcessing.Domain\AGS.WindowsAndDoors.OrderProcessing.Domain.csproj", "{C2DBE3B1-805F-44E0-BAFC-FCE4687B604A}"
 EndProject
-
-# OrderProcessing Bounded Context
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "OrderProcessing", "OrderProcessing", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.OrderProcessing.Application", "src\BoundedContexts\OrderProcessing\AGS.WindowsAndDoors.OrderProcessing.Application\AGS.WindowsAndDoors.OrderProcessing.Application.csproj", "{F721FC84-C3E8-44A8-B9E7-F8436A375379}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.OrderProcessing.Domain", "src\BoundedContexts\OrderProcessing\AGS.WindowsAndDoors.OrderProcessing.Domain\AGS.WindowsAndDoors.OrderProcessing.Domain.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.OrderProcessing.Infrastructure", "src\BoundedContexts\OrderProcessing\AGS.WindowsAndDoors.OrderProcessing.Infrastructure\AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj", "{6582A01C-8E47-4738-B36A-32A516670D38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.OrderProcessing.Application", "src\BoundedContexts\OrderProcessing\AGS.WindowsAndDoors.OrderProcessing.Application\AGS.WindowsAndDoors.OrderProcessing.Application.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{D7A6CC26-DD52-4030-88EC-8238AA6F6E26}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.OrderProcessing.Infrastructure", "src\BoundedContexts\OrderProcessing\AGS.WindowsAndDoors.OrderProcessing.Infrastructure\AGS.WindowsAndDoors.OrderProcessing.Infrastructure.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{443B99C0-FE2A-459B-9C43-8561CE8F5023}"
 EndProject
-
-# =============================================================================
-# PRESENTATION LAYER
-# =============================================================================
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{00000000-0000-0000-0000-000000000000}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{0BA28E29-7A5E-4489-863B-07554BFDA868}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Backend", "Backend", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.WebAPI", "src\Presentation\Backend\AGS.WindowsAndDoors.WebAPI\AGS.WindowsAndDoors.WebAPI.csproj", "{EB151535-B994-4009-8845-3891C4F0EA56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.WebAPI", "src\Presentation\Backend\AGS.WindowsAndDoors.WebAPI\AGS.WindowsAndDoors.WebAPI.csproj", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppHost", "src\AppHost\AppHost.csproj", "{C5EE35D8-15D5-418F-A690-7EC862DFEE8D}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Frontend", "Frontend", "{00000000-0000-0000-0000-000000000000}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceDefaults", "src\ServiceDefaults\ServiceDefaults.csproj", "{A8599CAF-71D0-4798-918F-8FCFA8913DB2}"
 EndProject
-
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AGS.WindowsAndDoors.SharedKernel.Testing", "src\SharedKernel\AGS.WindowsAndDoors.SharedKernel.Testing\AGS.WindowsAndDoors.SharedKernel.Testing.csproj", "{016431EF-C0D5-4EDA-A793-892E9370903E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF0-456789012345}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF0-456789012345}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF0-456789012345}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF0-456789012345}.Release|Any CPU.Build.0 = Release|Any CPU
-		{G7H8I9J0-K1L2-3456-0123-789012345678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{G7H8I9J0-K1L2-3456-0123-789012345678}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{G7H8I9J0-K1L2-3456-0123-789012345678}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{G7H8I9J0-K1L2-3456-0123-789012345678}.Release|Any CPU.Build.0 = Release|Any CPU
-		{H8I9J0K1-L2M3-4567-1234-890123456789}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{H8I9J0K1-L2M3-4567-1234-890123456789}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{H8I9J0K1-L2M3-4567-1234-890123456789}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{H8I9J0K1-L2M3-4567-1234-890123456789}.Release|Any CPU.Build.0 = Release|Any CPU
-		{I9J0K1L2-M3N4-5678-2345-901234567890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{I9J0K1L2-M3N4-5678-2345-901234567890}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{I9J0K1L2-M3N4-5678-2345-901234567890}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{I9J0K1L2-M3N4-5678-2345-901234567890}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F7A8B9C0-1D2E-3F4A-5B6C-7D8E9F0A1B2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F7A8B9C0-1D2E-3F4A-5B6C-7D8E9F0A1B2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F7A8B9C0-1D2E-3F4A-5B6C-7D8E9F0A1B2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F7A8B9C0-1D2E-3F4A-5B6C-7D8E9F0A1B2C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{K1L2M3N4-O5P6-7890-4567-123456789012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{K1L2M3N4-O5P6-7890-4567-123456789012}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{K1L2M3N4-O5P6-7890-4567-123456789012}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{K1L2M3N4-O5P6-7890-4567-123456789012}.Release|Any CPU.Build.0 = Release|Any CPU
-		{L2M3N4O5-P6Q7-8901-5678-234567890123}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{L2M3N4O5-P6Q7-8901-5678-234567890123}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{L2M3N4O5-P6Q7-8901-5678-234567890123}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{L2M3N4O5-P6Q7-8901-5678-234567890123}.Release|Any CPU.Build.0 = Release|Any CPU
-		{M3N4O5P6-Q7R8-9012-6789-345678901234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{M3N4O5P6-Q7R8-9012-6789-345678901234}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{M3N4O5P6-Q7R8-9012-6789-345678901234}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{M3N4O5P6-Q7R8-9012-6789-345678901234}.Release|Any CPU.Build.0 = Release|Any CPU
-		{O5P6Q7R8-S9T0-1234-89AB-567890123456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{O5P6Q7R8-S9T0-1234-89AB-567890123456}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{O5P6Q7R8-S9T0-1234-89AB-567890123456}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{O5P6Q7R8-S9T0-1234-89AB-567890123456}.Release|Any CPU.Build.0 = Release|Any CPU
-		{P6Q7R8S9-T0U1-2345-9ABC-678901234567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{P6Q7R8S9-T0U1-2345-9ABC-678901234567}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{P6Q7R8S9-T0U1-2345-9ABC-678901234567}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{P6Q7R8S9-T0U1-2345-9ABC-678901234567}.Release|Any CPU.Build.0 = Release|Any CPU
-		{Q7R8S9T0-U1V2-3456-ABCD-789012345678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{Q7R8S9T0-U1V2-3456-ABCD-789012345678}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{Q7R8S9T0-U1V2-3456-ABCD-789012345678}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{Q7R8S9T0-U1V2-3456-ABCD-789012345678}.Release|Any CPU.Build.0 = Release|Any CPU
-		{T0U1V2W3-X4Y5-6789-DEF0-012345678901}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{T0U1V2W3-X4Y5-6789-DEF0-012345678901}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{T0U1V2W3-X4Y5-6789-DEF0-012345678901}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{T0U1V2W3-X4Y5-6789-DEF0-012345678901}.Release|Any CPU.Build.0 = Release|Any CPU
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		# SharedKernel project under SharedKernel folder
-		{D4E5F6G7-H8I9-0123-DEF0-456789012345} = {C3D4E5F6-G7H8-9012-CDEF-345678901234}
-		# BoundedContexts solution folders
-		{F6G7H8I9-J0K1-2345-F012-678901234567} = {E5F6G7H8-I9J0-1234-EF01-567890123456}
-		{J0K1L2M3-N4O5-6789-3456-012345678901} = {E5F6G7H8-I9J0-1234-EF01-567890123456}
-		{N4O5P6Q7-R8S9-0123-789A-456789012345} = {E5F6G7H8-I9J0-1234-EF01-567890123456}
-		# ProductCatalog projects under ProductCatalog folder
-		{G7H8I9J0-K1L2-3456-0123-789012345678} = {F6G7H8I9-J0K1-2345-F012-678901234567}
-		{H8I9J0K1-L2M3-4567-1234-890123456789} = {F6G7H8I9-J0K1-2345-F012-678901234567}
-		{I9J0K1L2-M3N4-5678-2345-901234567890} = {F6G7H8I9-J0K1-2345-F012-678901234567}
-		# ProductDesign projects under ProductDesign folder
-		{K1L2M3N4-O5P6-7890-4567-123456789012} = {J0K1L2M3-N4O5-6789-3456-012345678901}
-		{L2M3N4O5-P6Q7-8901-5678-234567890123} = {J0K1L2M3-N4O5-6789-3456-012345678901}
-		{M3N4O5P6-Q7R8-9012-6789-345678901234} = {J0K1L2M3-N4O5-6789-3456-012345678901}
-		# OrderProcessing projects under OrderProcessing folder
-		{O5P6Q7R8-S9T0-1234-89AB-567890123456} = {N4O5P6Q7-R8S9-0123-789A-456789012345}
-		{P6Q7R8S9-T0U1-2345-9ABC-678901234567} = {N4O5P6Q7-R8S9-0123-789A-456789012345}
-		{Q7R8S9T0-U1V2-3456-ABCD-789012345678} = {N4O5P6Q7-R8S9-0123-789A-456789012345}
-		# Presentation projects under Presentation folders
-		{S9T0U1V2-W3X4-5678-CDEF-901234567890} = {R8S9T0U1-V2W3-4567-BCDE-890123456789}
-		{U1V2W3X4-Y5Z6-789A-EF01-123456789012} = {R8S9T0U1-V2W3-4567-BCDE-890123456789}
-		{T0U1V2W3-X4Y5-6789-DEF0-012345678901} = {S9T0U1V2-W3X4-5678-CDEF-901234567890}
-		{F7A8B9C0-1D2E-3F4A-5B6C-7D8E9F0A1B2C} = {00000000-0000-0000-0000-000000000000}
-		{00000000-0000-0000-0000-000000000000} = {00000000-0000-0000-0000-000000000000}
+		{94991510-2CE2-4F5A-8E0A-D1979D36D7A3} = {0C735ACB-D402-40C7-8F9B-0485E8C6F3DC}
+		{65CAF07D-A132-4AF1-8089-9CE3FDBE92A6} = {94991510-2CE2-4F5A-8E0A-D1979D36D7A3}
+		{76449D28-0C29-46A8-A22F-C9DC6E83978B} = {94991510-2CE2-4F5A-8E0A-D1979D36D7A3}
+		{02A5D7AA-28B5-45AE-9F01-9ABF5F56220A} = {94991510-2CE2-4F5A-8E0A-D1979D36D7A3}
+		{479711FC-D4B1-4033-B6CA-44B36EC36606} = {94991510-2CE2-4F5A-8E0A-D1979D36D7A3}
+		{8520EBA5-6EFB-4420-9A86-E42C0BE2C89C} = {0C735ACB-D402-40C7-8F9B-0485E8C6F3DC}
+		{32252427-2293-45AA-ABDA-C20B0F83E59D} = {FAF2C088-2806-4B9D-A696-C88D784447B4}
+		{41992E0A-B24C-428E-904E-1F03B6477CA0} = {8520EBA5-6EFB-4420-9A86-E42C0BE2C89C}
+		{840BECD0-29BC-4CD0-AD53-8EAAC0F7C3CA} = {8520EBA5-6EFB-4420-9A86-E42C0BE2C89C}
+		{0E9C957E-E3E9-4CEB-AE84-FA132D2B5DFE} = {8520EBA5-6EFB-4420-9A86-E42C0BE2C89C}
+		{6DCED9DD-EE59-48A2-A746-46125448FFFD} = {0C735ACB-D402-40C7-8F9B-0485E8C6F3DC}
+		{C2DBE3B1-805F-44E0-BAFC-FCE4687B604A} = {6DCED9DD-EE59-48A2-A746-46125448FFFD}
+		{F721FC84-C3E8-44A8-B9E7-F8436A375379} = {6DCED9DD-EE59-48A2-A746-46125448FFFD}
+		{6582A01C-8E47-4738-B36A-32A516670D38} = {6DCED9DD-EE59-48A2-A746-46125448FFFD}
+		{443B99C0-FE2A-459B-9C43-8561CE8F5023} = {D7A6CC26-DD52-4030-88EC-8238AA6F6E26}
+		{0BA28E29-7A5E-4489-863B-07554BFDA868} = {D7A6CC26-DD52-4030-88EC-8238AA6F6E26}
+		{EB151535-B994-4009-8845-3891C4F0EA56} = {443B99C0-FE2A-459B-9C43-8561CE8F5023}
+		{016431EF-C0D5-4EDA-A793-892E9370903E} = {FAF2C088-2806-4B9D-A696-C88D784447B4}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{65CAF07D-A132-4AF1-8089-9CE3FDBE92A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65CAF07D-A132-4AF1-8089-9CE3FDBE92A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65CAF07D-A132-4AF1-8089-9CE3FDBE92A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65CAF07D-A132-4AF1-8089-9CE3FDBE92A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76449D28-0C29-46A8-A22F-C9DC6E83978B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76449D28-0C29-46A8-A22F-C9DC6E83978B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76449D28-0C29-46A8-A22F-C9DC6E83978B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76449D28-0C29-46A8-A22F-C9DC6E83978B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02A5D7AA-28B5-45AE-9F01-9ABF5F56220A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02A5D7AA-28B5-45AE-9F01-9ABF5F56220A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02A5D7AA-28B5-45AE-9F01-9ABF5F56220A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02A5D7AA-28B5-45AE-9F01-9ABF5F56220A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{479711FC-D4B1-4033-B6CA-44B36EC36606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{479711FC-D4B1-4033-B6CA-44B36EC36606}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{479711FC-D4B1-4033-B6CA-44B36EC36606}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{479711FC-D4B1-4033-B6CA-44B36EC36606}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32252427-2293-45AA-ABDA-C20B0F83E59D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32252427-2293-45AA-ABDA-C20B0F83E59D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32252427-2293-45AA-ABDA-C20B0F83E59D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32252427-2293-45AA-ABDA-C20B0F83E59D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{41992E0A-B24C-428E-904E-1F03B6477CA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{41992E0A-B24C-428E-904E-1F03B6477CA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{41992E0A-B24C-428E-904E-1F03B6477CA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{41992E0A-B24C-428E-904E-1F03B6477CA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{840BECD0-29BC-4CD0-AD53-8EAAC0F7C3CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{840BECD0-29BC-4CD0-AD53-8EAAC0F7C3CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{840BECD0-29BC-4CD0-AD53-8EAAC0F7C3CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{840BECD0-29BC-4CD0-AD53-8EAAC0F7C3CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0E9C957E-E3E9-4CEB-AE84-FA132D2B5DFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0E9C957E-E3E9-4CEB-AE84-FA132D2B5DFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0E9C957E-E3E9-4CEB-AE84-FA132D2B5DFE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0E9C957E-E3E9-4CEB-AE84-FA132D2B5DFE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C2DBE3B1-805F-44E0-BAFC-FCE4687B604A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2DBE3B1-805F-44E0-BAFC-FCE4687B604A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2DBE3B1-805F-44E0-BAFC-FCE4687B604A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2DBE3B1-805F-44E0-BAFC-FCE4687B604A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F721FC84-C3E8-44A8-B9E7-F8436A375379}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F721FC84-C3E8-44A8-B9E7-F8436A375379}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F721FC84-C3E8-44A8-B9E7-F8436A375379}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F721FC84-C3E8-44A8-B9E7-F8436A375379}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6582A01C-8E47-4738-B36A-32A516670D38}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6582A01C-8E47-4738-B36A-32A516670D38}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6582A01C-8E47-4738-B36A-32A516670D38}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6582A01C-8E47-4738-B36A-32A516670D38}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EB151535-B994-4009-8845-3891C4F0EA56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EB151535-B994-4009-8845-3891C4F0EA56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EB151535-B994-4009-8845-3891C4F0EA56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EB151535-B994-4009-8845-3891C4F0EA56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5EE35D8-15D5-418F-A690-7EC862DFEE8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5EE35D8-15D5-418F-A690-7EC862DFEE8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5EE35D8-15D5-418F-A690-7EC862DFEE8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5EE35D8-15D5-418F-A690-7EC862DFEE8D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8599CAF-71D0-4798-918F-8FCFA8913DB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8599CAF-71D0-4798-918F-8FCFA8913DB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8599CAF-71D0-4798-918F-8FCFA8913DB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8599CAF-71D0-4798-918F-8FCFA8913DB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{016431EF-C0D5-4EDA-A793-892E9370903E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{016431EF-C0D5-4EDA-A793-892E9370903E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{016431EF-C0D5-4EDA-A793-892E9370903E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{016431EF-C0D5-4EDA-A793-892E9370903E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

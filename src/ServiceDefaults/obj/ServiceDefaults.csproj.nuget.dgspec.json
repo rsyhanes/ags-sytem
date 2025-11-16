@@ -14,7 +14,7 @@
         "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\ServiceDefaults\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",
