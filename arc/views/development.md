@@ -501,6 +501,214 @@ public static class DependencyInjection
 7. **User Experience Separation**: Different interfaces optimized for different user types
 8. **Independent Deployment**: Customer and admin interfaces can be deployed separately
 
+## Hexagonal Architecture Implementation
+
+### Core Components
+
+#### The Hexagon (Application Core)
+- **Business Logic Only**: Contains only domain/business logic, completely technology-agnostic
+- **No External Dependencies**: No references to frameworks, databases, UI technologies
+- **Ports as Boundary**: Interfaces define the application boundary
+- **Configurable Dependencies**: All external interactions through dependency injection
+
+#### Ports (Application Interfaces)
+**Driver Ports** (Primary/Use Case Boundary):
+- Application's API offered to the outside world
+- Named with verbs ending in "ing" (e.g., "for processing orders", "for creating items")
+- Implement use cases/scenarios via MediatR commands/queries
+- Single Responsibility Principle per port
+
+**Driven Ports** (Secondary/SPI):
+- Interfaces for services the application requires
+- Repository ports: for data persistence/retrieval
+- Recipient ports: for notifications, external communications
+- Technology-agnostic naming and contracts
+
+#### Adapters (Technology Bridges)
+**Driver Adapters**: Convert external requests to port calls
+- REST API controllers (Minimal API)
+- CLI interfaces
+- Test frameworks (xUnit with AutoFixture)
+- Event subscribers
+
+**Driven Adapters**: Implement driven ports with specific technologies
+- Database adapters (Entity Framework Core)
+- Email/notification adapters
+- External API clients
+- Message queue publishers
+- Mock adapters for testing
+
+### Dependency Flow Rules
+
+#### Configurable Dependency Pattern
+```
+Driver Adapter → Application (Driver Port Interface)
+Application → Driven Adapter (Driven Port Interface)
+```
+
+- **Driver Side**: Adapter depends on application (adapter injects/calls application)
+- **Driven Side**: Application depends on adapter (application injects/uses adapter)
+- **Composition Root**: Driver adapter (WebAPI) configures all dependencies
+
+#### Architectural Boundaries
+```
+Driver Adapters → Application ← Driven Adapters
+                    ↑
+               Application Core
+                    ↓
+               Nothing (Technology Agnostic)
+```
+
+### Composition Root Pattern
+
+#### Location: Driver Adapter (WebAPI)
+```csharp
+// WebAPI/Program.cs - Composition Root
+var builder = WebApplication.CreateBuilder(args);
+
+// Register application services (technology-agnostic)
+builder.Services.AddProductCatalogApplication();
+
+// Register infrastructure adapters (technology-specific)
+builder.Services.AddScoped<IItemRepositoryPort, SqlItemRepositoryAdapter>();
+
+// Configure driven adapters based on environment
+if (environment == "Testing")
+{
+    builder.Services.AddScoped<IItemRepositoryPort, MockItemRepositoryAdapter>();
+}
+```
+
+#### Application Service Registration
+```csharp
+// Application/ServiceCollectionExtensions.cs
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection AddProductCatalogApplication(
+        this IServiceCollection services)
+    {
+        // Register MediatR handlers (driver ports)
+        services.AddMediatR(typeof(CreateItemCommandHandler).Assembly);
+
+        // Register FluentValidation validators
+        services.AddValidatorsFromAssembly(typeof(CreateItemCommandHandler).Assembly);
+
+        return services;
+    }
+}
+```
+
+### Testing Strategy (4-Step Implementation)
+
+#### Step 1: Test Drivers + Mock Driven Adapters
+- Implement driver ports with test-driven development
+- Use BDD scenarios to define behavior
+- Create mock driven adapters for development
+- **Result**: Complete hexagon testable in isolation
+
+#### Step 2: Real Drivers + Mock Driven Adapters
+- Add real driver adapters (REST API, Web UI)
+- Keep mock driven adapters for isolated testing
+- **Result**: Test new driver adapters with mocked dependencies
+
+#### Step 3: Test Drivers + Real Driven Adapters
+- Switch back to test drivers
+- Implement real driven adapters (databases, external services)
+- **Result**: Test new driven adapters in isolation
+
+#### Step 4: Real Drivers + Real Driven Adapters
+- Configure all ports with production adapters
+- **Result**: Full end-to-end system testing
+
+### Port Implementation Examples
+
+#### Driver Port (Use Case)
+```csharp
+// Application/UseCases/CreateItem/CreateItemCommand.cs
+public record CreateItemCommand(
+    string Code, string Name, string Description,
+    string CategoryName, string CategoryCode, decimal Price
+) : IRequest<ItemDto>;
+
+// Application/UseCases/CreateItem/CreateItemCommandHandler.cs
+public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, ItemDto>
+{
+    private readonly IItemRepositoryPort _repository;
+
+    public CreateItemCommandHandler(IItemRepositoryPort repository)
+    {
+        _repository = repository;
+    }
+
+    public async Task<ItemDto> Handle(CreateItemCommand request, CancellationToken ct)
+    {
+        // Business logic here
+        var item = Item.Create(request.Code, request.Name, request.Description,
+                              Category.Create(request.CategoryName, request.CategoryCode),
+                              request.Price);
+
+        var saved = await _repository.SaveAsync(item, ct);
+        return ItemMapper.ToDto(saved);
+    }
+}
+```
+
+#### Driven Port (Repository)
+```csharp
+// Domain/Ports/IItemRepositoryPort.cs
+public interface IItemRepositoryPort
+{
+    Task<Item> SaveAsync(Item item, CancellationToken ct = default);
+    Task<Item?> FindByCodeAsync(string code, CancellationToken ct = default);
+    Task<IReadOnlyCollection<Item>> FindAllAsync(CancellationToken ct = default);
+    Task<bool> ExistsByCodeAsync(string code, CancellationToken ct = default);
+}
+```
+
+#### Driven Adapter (Database Implementation)
+```csharp
+// Infrastructure/Adapters/SqlItemRepositoryAdapter.cs
+public class SqlItemRepositoryAdapter : IItemRepositoryPort
+{
+    private readonly ProductCatalogDbContext _context;
+
+    public SqlItemRepositoryAdapter(ProductCatalogDbContext context)
+    {
+        _context = context;
+    }
+
+    public async Task<Item> SaveAsync(Item item, CancellationToken ct)
+    {
+        var entity = ItemEntity.FromDomain(item);
+        _context.Items.Add(entity);
+        await _context.SaveChangesAsync(ct);
+        return entity.ToDomain();
+    }
+
+    // Other methods...
+}
+```
+
+### Benefits Achieved
+
+✅ **Technology Agnosticism**: Business logic unchanged when switching databases, frameworks, or UI
+✅ **Testability**: Complete isolation testing via mock adapters
+✅ **Flexibility**: Easy technology swapping via configuration
+✅ **Maintainability**: Clear separation prevents technology concerns from leaking into business logic
+✅ **Delayed Decisions**: Choose technologies later without affecting domain implementation
+
+### Development Workflow
+
+1. **Start with Domain**: Implement business logic and entities
+2. **Define Ports**: Create driver and driven port interfaces
+3. **Implement Application Services**: Use cases that orchestrate domain logic
+4. **Create Mock Adapters**: For testing and development
+5. **Implement Real Adapters**: Database, external services, UI
+6. **Configure Composition Root**: Wire everything together in entry point
+7. **Test Incrementally**: Follow the 4-step testing approach
+
+This Hexagonal Architecture foundation ensures the distributed application remains maintainable, testable, and technology-flexible as it evolves across multiple bounded contexts.
+
 ## Implementation Notes
 
 - Use **Aggregate patterns** for transactional consistency boundaries

@@ -1,4 +1,4 @@
-﻿# Master Agent Prompt - AGS Windows and Doors System
+# Master Agent Prompt - AGS Windows and Doors System
 
 You are Cline, working on a monorepo using spec-driven development with Ports & Adapters architecture.
 

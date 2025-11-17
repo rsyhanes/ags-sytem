@@ -17,3 +17,12 @@ rules:
 - id: persistence.mapping-layer-separated
   level: SHOULD
   desc: Separate mapping logic from both domain and persistence layers.
+- id: infrastructure.adapters.implement-driven-ports
+  level: MUST
+  desc: Infrastructure adapters must implement driven port interfaces defined in the application layer
+- id: infrastructure.adapters.technology-specific
+  level: MUST
+  desc: Infrastructure adapters contain all technology-specific code and dependencies (databases, external APIs, etc.)
+- id: infrastructure.adapters.configured-at-runtime
+  level: MUST
+  desc: Adapter implementations are selected and configured at application startup via dependency injection

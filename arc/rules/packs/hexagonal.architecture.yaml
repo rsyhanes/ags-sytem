@@ -1,0 +1,26 @@
+id: hexagonal.architecture
+rules:
+- id: hexagonal.ports.driver-naming
+  level: MUST
+  desc: Driver ports must be named with verbs ending in "ing" (e.g., "for processing orders", "for creating items")
+- id: hexagonal.ports.driven-naming
+  level: MUST
+  desc: Driven ports must be named with verbs ending in "ing" and indicate the service required (e.g., "for persisting data", "for sending notifications")
+- id: hexagonal.dependencies.driver-adapter-to-application
+  level: MUST
+  desc: Driver adapters depend on application driver ports, but application does not depend on specific driver adapters
+- id: hexagonal.dependencies.application-to-driven-adapter
+  level: MUST
+  desc: Application depends on driven port interfaces, implemented by driven adapters
+- id: hexagonal.hexagon-technology-agnostic
+  level: MUST
+  desc: The hexagon (application + domain) must contain no technology-specific code or dependencies
+- id: hexagonal.adapters-outside-hexagon
+  level: MUST
+  desc: All adapters (driver and driven) reside outside the hexagon and contain technology-specific implementations
+- id: hexagonal.composition-root-driver-adapter
+  level: MUST
+  desc: Composition root for dependency injection configuration resides in driver adapter (entry point) to maintain proper dependency directions
+- id: hexagonal.ports-information-hiding
+  level: MUST
+  desc: Ports are the only public interfaces of the hexagon - no internal implementation details should be exposed

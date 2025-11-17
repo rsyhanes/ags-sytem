@@ -15,3 +15,9 @@ rules:
 - id: app.error-boundary
   level: MUST
   desc: Application layer must catch domain errors and translate them appropriately.
+- id: application.services.di-extension-methods
+  level: SHOULD
+  desc: Application layers provide extension methods for registering application services (MediatR, validators) without infrastructure dependencies
+- id: application.services.composition-root-separation
+  level: MUST
+  desc: Application service registration is separate from infrastructure adapter configuration to maintain technology agnosticism
