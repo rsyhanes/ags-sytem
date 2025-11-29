@@ -29,7 +29,7 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, ItemD
             var existingItem = await _itemRepository.FindByCodeAsync(request.Code, cancellationToken);
             if (existingItem != null)
             {
-            throw new BusinessRuleViolationException("duplicate.item.code", $"Item with code '{request.Code}' already exists");
+                throw new BusinessRuleViolationException("duplicate.item.code", $"Item with code '{request.Code}' already exists");
             }
 
             // Create domain objects from request

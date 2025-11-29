@@ -1,0 +1,122 @@
+spec:
+  id: orders.submit-order.v1
+  context: orders
+
+  domain:
+    problem: |
+      Customers must be able to submit orders composed of multiple line items,
+      with shipping and billing information, while ensuring validation and
+      correct processing rules.
+    rationale: |
+      Order submission is a core business capability that triggers downstream
+      workflows such as charging, fulfillment, and inventory allocation.
+
+    concepts:
+      entities:
+        - Order(orderId, customerInfo, lineItems, totals, status)
+      value_objects:
+        - OrderLine(itemCode, quantity, unitPrice, amount)
+        - Money(amount, currency)
+      domain_events:
+        - OrderSubmitted
+
+    rules:
+      must:
+        - "Order must contain at least one line item."
+        - "Order totals must equal the sum of line item amounts."
+      cannot:
+        - "Order cannot be submitted if customer information is incomplete."
+        - "Order cannot reference nonexistent items."
+
+    use_case:
+      name: SubmitOrder
+      trigger: "User submits a completed order through the system."
+      description: |
+        Validates order data, verifies item existence and prices, computes totals,
+        persists the order, and emits an OrderSubmitted event.
+      steps:
+        - Validate order payload
+        - Verify items exist
+        - Calculate totals
+        - Persist order
+        - Emit OrderSubmitted event
+
+  interactions:
+    inbound:
+      api:
+        - "POST /api/orders"
+      ui: []
+      events: []
+
+    outbound:
+      api_responses:
+        - "201 Created: Order submitted successfully"
+        - "400 BadRequest: Validation errors"
+        - "404 NotFound: Item not found"
+      events:
+        - "OrderSubmitted"
+      persistence:
+        - "OrderRepositoryPort.Save(order)"
+      external_calls:
+        - "ItemPricingPort.ValidateItems(request)"
+
+  contracts:
+    domain:
+      - "../contracts/schemas/domain/order.v1.json"
+      - "../contracts/schemas/domain/order-line.v1.json"
+      - "../contracts/schemas/domain/money.v1.json"
+
+    inbound:
+      - "../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders"
+
+    outbound:
+      - "../contracts/schemas/ports/order-repository-port.v1.json"
+      - "../contracts/schemas/ports/item-pricing-port.v1.json"
+      - "../contracts/asyncapi/order-events.v1.yaml#/channels/order.submitted"
+
+    ui_state:
+      derives_from:
+        request: "../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders"
+        response: "../contracts/schemas/domain/order.v1.json"
+      template:
+        include_status: true
+
+  scenarios:
+    - name: submit-order-happy-path
+      given: "Valid customer info and line items exist"
+      when: "SubmitOrder"
+      then:
+        - "Order validated"
+        - "OrderRepositoryPort.Save called"
+        - "OrderSubmitted event emitted"
+
+    - name: submit-order-item-not-found
+      given: "Order contains unknown item code"
+      when: "SubmitOrder"
+      then:
+        - "NotFound error"
+        - "No persistence"
+        - "No events emitted"
+
+    - name: submit-order-invalid-payload
+      given: "Order payload missing required fields"
+      when: "SubmitOrder"
+      then:
+        - "Validation error"
+        - "No persistence"
+        - "No events emitted"
+
+  deliverables:
+    - "Domain entity: Order"
+    - "Value objects: OrderLine, Money"
+    - "Use case handler: SubmitOrder"
+    - "Ports: OrderRepositoryPort, ItemPricingPort"
+    - "HTTP controller adapter for POST /api/orders"
+    - "UI state model"
+    - "Tests: domain, use case, adapters, scenarios"
+
+  packs:
+    - "spec.linting"
+    - "domain.purity"
+    - "ui.state"
+    - "ports.contracts"

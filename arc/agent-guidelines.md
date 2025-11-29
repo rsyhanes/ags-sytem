@@ -1,160 +1,172 @@
-﻿# agent-guidelines
+# 🤖 Agent Code Generation Guidelines — Domain First
 
-You are working in a monorepo that uses:
-- Spec-driven development
-- Ports & Adapters (Hexagonal) architecture
-- Domain-first design
-- .NET for backend services and .NET Aspire for orchestrating the distributed app environment
+These guidelines ensure that all AI agents generate consistent, domain-aligned, architecture-safe code across the entire monorepo. Agents should follow this file whenever interpreting specs under `/arc/specs`.
 
-This document tells you exactly how to use the structure in `/arc`.
+This guide reflects the **domain-first specification model**, where the domain is the root of all behavior, and adapters exist only as projections of domain use cases.
 
 ---
 
-## 1. Default Behavior
+# 🧩 1. Read Specs in Strict Order (Domain → Interactions → Contracts → Scenarios → Deliverables)
 
-When asked to implement or modify something:
+Agents must process every spec in the following order:
 
-1. Start from `/arc/index.yaml`.
-2. Load the target spec from `/arc/specs/*.spec.yaml`.
-3. Respect the layout and conventions defined there.
-4. Only touch files and folders that align with that structure.
+1. **`domain`** — Always the starting point.
+2. **`interactions`** — How the environment triggers the domain use case.
+3. **`contracts`** — The ground-truth schemas for inputs/outputs.
+4. **`scenarios`** — Behavioral validation.
+5. **`deliverables`** — What code must be generated.
+6. **`packs`** — Which rules apply.
 
-If you need something that does not exist yet, create it following these rules.
-
----
-
-## 2. Folder Layout (Ports & Adapters Lite)
-
-Follow the structure at /arc/views/development and learn from that.
-
-**Rules for dependencies:**
-
-- `X.domain` → depends on nothing in `X.adapters`, `X.ports` or frameworks.
-- `X.app` → depends on `X.domain` and `X.ports`, not on `X.adapters`.
-- `X.ports` → no dependency on `X.adapters`.
-- `X.adapters` → may depend on `X.domain`, `X.app`, and `X.ports`.
-
-Do **not** introduce new top-level patterns instead of this structure.
+Never derive behavior from UI or API first. The **domain drives everything**.
 
 ---
 
-## 3. Using Specs
+# 🌱 2. Domain First (Primary Source of Truth)
 
-Specs live in `/arc/specs` and are the primary input.
+Agents must start with the `domain` section.
 
-When implementing a spec:
+### The domain section defines:
+- **the problem** to solve
+- **why** it exists (business rationale)
+- **concepts**: entities, value objects, domain events
+- **rules**: must/cannot
+- **the use case**: the core domain behavior
 
-1. Read the `spec`:
-    - `objective`, `scope.in/out`
-    - `scenarios` (Given/When/Then)
-    - `packs` (rule packs by ID)
-    - `contracts` references (OpenAPI/AsyncAPI/JSON Schemas)
-    - any `implementation.layout` hints
-
-2. Implement exactly what the spec describes:
-    - Add or update domain types in `src/<context>.domain`.
-    - Add or update use-cases in `src/<context>.app`.
-    - Define or extend ports in `src/<context>.ports`.
-    - Implement adapters in `src/<context>.adapters`.
-
-3. For each scenario in the spec, ensure there is a corresponding test.
-
-If something is ambiguous:
-- Prefer extending the spec (or proposing an update) over inventing ad-hoc behavior.
+### Agent responsibilities:
+- Generate domain entities and value objects.
+- Implement rules as invariants or guards.
+- Implement the use case as a **pure domain behavior**.
+- Domain code must contain **no framework**, **no persistence**, **no HTTP**, and **no UI logic**.
 
 ---
 
-## 4. Using Contracts
+# 🔗 3. Interactions (Ports → Domain → Ports)
 
-Contracts live in `/arc/contracts`:
+After establishing domain behavior, agents then interpret the `interactions` section.
 
-- HTTP APIs: `/arc/contracts/openapi/*.yaml`
-- Messaging: `/arc/contracts/asyncapi/*.yaml`
-- Shared schemas: `/arc/contracts/schemas/**`
+### Inbound interactions drive the use case:
+- UI state changes
+- API requests
+- incoming integration events
 
-When creating or updating adapters:
+### Outbound interactions reflect outcomes:
+- domain events
+- API responses
+- persistence operations
+- external provider calls
 
-- Driving ports (e.g. HTTP endpoints) MUST conform to the referenced OpenAPI.
-- Messaging ports MUST conform to the AsyncAPI/message schemas.
-- If a spec references a contract ID, use **that** as the single source of truth.
-- If a new port is introduced, add or reference an appropriate schema/contract.
+Agents must:
+- generate **thin adapters** that map inbound contracts → domain use case
+- generate **thin outbound adapters** from domain outcome → outbound contract
+- keep all logic inside the domain or use case service
 
-Do **not** create APIs or message shapes that contradict their contracts.
-
----
-
-## 5. Using Rules & Packs
-
-Rule packs live in `/arc/rules/packs`.
-
-Specs reference rules by **ID**, for example:
-
-- `domain.purity`
-- `ports.contracts`
-- `adapters.conformance`
-- `web-api`
-- `messaging`
-- `platform.aspire`
-
-Your responsibilities:
-
-- When a spec references a rule pack, follow its intent in your implementation.
-- Do not duplicate rule text in specs or code; always reference by ID.
-- If you cannot satisfy a MUST rule, propose a **waiver** in the spec with:
-    - rule ID
-    - reason
-    - owner
-    - expiry
-    - mitigation
+Adapters are strictly I/O boundaries.
 
 ---
 
-## 6. Tests & Scenarios
+# 📄 4. Contracts (Schemas Reference Layer)
 
-For each spec:
+Agents must treat contracts as **immutable, authoritative structures**.
 
-- Every key `scenario` should be backed by:
-    - domain tests (for core invariants),
-    - contract tests (for HTTP/messaging),
-    - adapter/port conformance tests where relevant,
-    - and optionally e2e tests for cross-component flows.
+### Contract categories:
+- **domain** → canonical shapes
+- **inbound** → what triggers the use case
+- **outbound** → what the use case produces for the outside world
+- **ui_state** → client-side state derived from requests/responses
 
-When you add or modify behavior:
-
-- Prefer adding/updating tests that map clearly to scenarios.
-- Keep names aligned:
-    - Scenario: `register-happy-path`
-    - Test: `RegisterUser_HappyPath` or equivalent.
-
----
-
-## 7. Views & Ontology
-
-- `/arc/views` contains 4+1 view markdowns and diagrams.
-    - They are for orientation only.
-    - If they conflict with specs or contracts, the specs/contracts win.
-
-- `/arc/ontology` (if present) contains a machine-readable graph.
-    - Use it for navigation and impact analysis.
-    - Do not treat it as a separate source of truth; it reflects specs, rules, and contracts.
+### Agent responsibilities:
+- Ensure all request/response mapping follows schemas *exactly*.
+- Never infer or add fields not defined by contracts.
+- Keep domain entities separate from persistence models.
+- Keep UI state separate from API request/response shapes.
 
 ---
 
-## 8. Things You MUST NOT Do
+# 🧪 5. Scenarios (Behavioral Backbone)
 
-- Do **not**:
-    - invent new top-level folder structures without updating `/arc/index.yaml`.
-    - bypass `*.domain` by putting core business logic directly in adapters.
-    - define new rules inline in specs; always extend rule packs instead.
-    - change contracts without aligning the corresponding specs and tests.
-    - ignore referenced rule packs when a spec includes them.
+Each scenario defines:
+- the initial condition
+- the trigger
+- the domain behavior
+- the observed outbound effects
 
-If you need a new pattern:
-- Propose it by updating:
-    - `/arc/index.yaml`
-    - this file
-    - and, if appropriate, adding/adjusting a rule pack.
+Agents must:
+- implement scenario-based tests
+- validate both domain state change **and** outbound effects
+- ensure all branches of domain logic are covered
 
 ---
 
-Follow this and you’ll generate code and docs that fit naturally into the system instead of fighting it.
+# 🎨 6. UI State Model Generation
+
+UI state models derive from contracts and domain outcomes.
+
+Agents must:
+- derive `input` fields from **inbound request schemas**
+- derive `result` fields from **domain schemas**
+- ensure presence of status flags (`loading`, `error`, `success`)
+- ensure UI state is framework-agnostic (not tied to React/Gatsby/Vue)
+
+UI state models represent **client-side feature state**, not forms.
+
+---
+
+# 🏗️ 7. Deliverables (Required Generation Targets)
+
+Every spec lists the exact deliverables agents must produce:
+
+- domain logic
+- application service (use case orchestrator)
+- inbound adapters (UI/API/events)
+- outbound adapters (db/events/external)
+- UI state model
+- tests following scenarios
+
+Agents must generate all deliverables unless explicitly not applicable.
+
+---
+
+# 📦 8. Rule Packs
+
+Agents must enforce rule packs listed under `packs`.
+
+Examples:
+- `spec.linting` → enforce spec shape correctness
+- `domain.purity` → no framework contamination inside domain
+- `ui.state` → enforce UI state derivation
+- `ports.contracts` → ensure adapters match contracts exactly
+
+Agents should treat rule packs as **hard constraints**.
+
+---
+
+# 🔒 9. Architecture Purity Rules
+
+Agents must:
+- isolate domain from frameworks
+- generate ports and adapters explicitly
+- use contracts instead of implicit shapes
+- strictly separate domain models, DTOs, persistence models, and UI state models
+- ensure domain never knows about the outside world
+- ensure adapters never contain domain logic
+
+This is required for correctness.
+
+---
+
+# 🧭 10. Final Agent Checklist
+
+Before generating any code, an agent must confirm:
+
+- [ ] Domain problem, rationale, rules, and use_case fully understood
+- [ ] Domain entities/value objects designed
+- [ ] Domain use case implemented in pure domain style
+- [ ] Inbound adapters map requests → domain
+- [ ] Outbound adapters map domain → responses/events/persistence
+- [ ] UI state derived using request/response schemas
+- [ ] All contracts referenced correctly
+- [ ] All scenarios covered in tests
+- [ ] All deliverables produced
+- [ ] All rule packs satisfied
+
+Agents that follow this checklist will consistently produce correct, traceable, domain-aligned implementations.

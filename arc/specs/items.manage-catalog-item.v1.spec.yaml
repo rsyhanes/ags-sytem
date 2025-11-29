@@ -1,0 +1,150 @@
+spec:
+  id: items.manage-catalog-item.v1
+  context: items
+
+  domain:
+    problem: |
+      The system must allow engineers to create, update, retrieve, and list catalog items
+      representing building components with a code, name, and measurement unit.
+    rationale: |
+      Catalog items serve as foundational components used across the business.
+      Accurate and consistent management of item definitions enables downstream
+      estimation, ordering, and fabrication processes.
+
+    concepts:
+      entities:
+        - Item(code, name, measure)
+      value_objects:
+        - Measure(Units, Inches)
+      domain_events:
+        - ItemCreated
+        - ItemUpdated
+
+    rules:
+      must:
+        - "Item code must be unique."
+        - "Item must contain a valid measure."
+      cannot:
+        - "Item cannot be created with empty code."
+        - "Item cannot be updated if it doesn't exist."
+
+    use_case:
+      name: ManageCatalogItem
+      trigger: "User performs create, update, list, or get actions on items."
+      description: |
+        Provides CRUD-style management for catalog items, enforcing validation,
+        uniqueness constraints, and repository operations.
+      steps:
+        - Validate input
+        - Ensure code uniqueness (for creation)
+        - Retrieve item (for update/get)
+        - Persist entity changes
+        - Emit domain event for created/updated items
+
+  interactions:
+    inbound:
+      api:
+        - "POST /api/items"
+        - "PUT /api/items/{code}"
+        - "GET /api/items"
+        - "GET /api/items/{code}"
+      ui: []
+      events: []
+
+    outbound:
+      api_responses:
+        - "201 Created: Item created"
+        - "200 OK: Item updated"
+        - "200 OK: Items listed"
+        - "404 NotFound: For missing items"
+        - "409 Conflict: For duplicate item code"
+
+      events:
+        - "ItemCreated"
+        - "ItemUpdated"
+
+      persistence:
+        - "ItemRepositoryPort.Save(item)"
+        - "ItemRepositoryPort.FindByCode(code)"
+        - "ItemRepositoryPort.FindAll()"
+
+      external_calls: []
+
+  contracts:
+    domain:
+      - "../contracts/schemas/domain/item.v1.json"
+      - "../contracts/schemas/domain/measure.v1.json"
+
+    inbound:
+      - "../contracts/openapi/items.v1.yaml#/paths/~1api~1items"
+      - "../contracts/openapi/items.v1.yaml#/paths/~1api~1items~1{code}"
+
+    outbound:
+      - "../contracts/schemas/ports/item-repository.v1.json"
+      - "../contracts/asyncapi/item-events.v1.yaml#/channels/item.created"
+      - "../contracts/asyncapi/item-events.v1.yaml#/channels/item.updated"
+
+    ui_state:
+      derives_from:
+        request: "../contracts/openapi/items.v1.yaml#/paths/~1api~1items"
+        response: "../contracts/schemas/domain/item.v1.json"
+      template:
+        include_status: true
+
+  scenarios:
+    - name: create-item-happy-path
+      given: "valid item data (code='2103', name='Frame', measure='Inches')"
+      when: "CreateItem"
+      then:
+        - "Item created and persisted"
+        - "ItemRepositoryPort.Save called with item"
+
+    - name: create-item-duplicate-code
+      given: "item with existing code"
+      when: "CreateItem"
+      then:
+        - "Conflict error"
+        - "No side effects"
+
+    - name: create-item-invalid-code
+      given: "empty or invalid item code"
+      when: "CreateItem"
+      then:
+        - "Validation error"
+        - "No side effects"
+
+    - name: update-item-happy-path
+      given: "existing item and valid update data"
+      when: "UpdateItem"
+      then:
+        - "Item updated and persisted"
+
+    - name: update-item-not-found
+      given: "non-existent item code"
+      when: "UpdateItem"
+      then:
+        - "NotFound error"
+        - "No side effects"
+
+    - name: list-items-happy-path
+      given: "items exist"
+      when: "ListItems"
+      then:
+        - "All items returned with proper formatting"
+
+  deliverables:
+    - "Domain entity: Item (code, name, measure) with validation rules"
+    - "Value object: Measure enumeration"
+    - "Use case handlers: CreateItem, UpdateItem, ListItems, GetItem"
+    - "Port interface: ItemRepositoryPort"
+    - "HTTP API (controller) adapter implementation"
+    - "Repository adapter: persistence implementation"
+    - "OpenAPI spec for items endpoints"
+    - "UI state model for item management"
+    - "Tests: domain specs, use case specs, adapter tests, scenario e2e tests"
+
+  packs:
+    - "spec.linting"
+    - "domain.purity"
+    - "ui.state"
+    - "ports.contracts"

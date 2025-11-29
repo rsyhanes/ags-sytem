@@ -1,0 +1,137 @@
+spec:
+  id: orders.calculate-bom.v1
+  context: orders
+
+  domain:
+    problem: |
+      The system must calculate a Bill of Materials (BOM) for a frame based on
+      system configuration, dimensions, color, and quantity. It must also validate
+      frame specifications before calculation.
+
+    rationale: |
+      Accurate BOM calculation ensures correct ordering, manufacturing planning,
+      and cost estimation. Validation prevents invalid inputs from producing
+      incorrect or misleading results.
+
+    concepts:
+      entities:
+        - Frame(systemCode, width, height, color, quantity)
+      value_objects:
+        - BOMLine(itemCode, itemName, componentName, quantity, length, angle, measure)
+        - BOM(frameSpec, bomLines, totalItems)
+      domain_events: []
+
+    rules:
+      must:
+        - "Frame dimensions must be valid for selected system."
+        - "System code must exist in system registry."
+        - "Color must be available for the chosen system."
+      cannot:
+        - "Cannot calculate BOM if validation fails."
+        - "Cannot produce negative or zero values for BOM quantities."
+
+    use_case:
+      name: CalculateBOM
+      trigger: "User submits frame specification for BOM calculation."
+      description: |
+        Responsible for validating frame specs, retrieving system configuration
+        components, evaluating formulas, and producing a complete Bill of Materials.
+      steps:
+        - Validate frame specification
+        - Retrieve system data and components
+        - Evaluate component formulas
+        - Construct BOMLines
+        - Aggregate totals
+        - Return BOM result
+
+  interactions:
+    inbound:
+      api:
+        - "POST /api/calculate-bom"
+        - "POST /api/validate-frame"
+      ui: []
+      events: []
+
+    outbound:
+      api_responses:
+        - "200 OK: BOM successfully calculated"
+        - "400 BadRequest: Validation errors"
+        - "422 UnprocessableEntity: Formula evaluation errors"
+      events: []
+      persistence: []
+      external_calls:
+        - "SystemRegistryPort.GetSystem(systemCode)"
+        - "ComponentRepositoryPort.GetComponents(systemCode)"
+        - "FormulaEnginePort.Evaluate(formula, variables)"
+
+  contracts:
+    domain:
+      - "../contracts/schemas/domain/frame.v1.json"
+      - "../contracts/schemas/domain/bom.v1.json"
+      - "../contracts/schemas/domain/bom-line.v1.json"
+
+    inbound:
+      - "../contracts/openapi/calculations.v1.yaml#/paths/~1api~1calculate-bom"
+      - "../contracts/openapi/calculations.v1.yaml#/paths/~1api~1validate-frame"
+
+    outbound:
+      - "../contracts/schemas/ports/system-registry-port.v1.json"
+      - "../contracts/schemas/ports/component-repository-port.v1.json"
+      - "../contracts/schemas/ports/formula-engine-port.v1.json"
+
+    ui_state:
+      derives_from:
+        request: "../contracts/openapi/calculations.v1.yaml#/paths/~1api~1calculate-bom"
+        response: "../contracts/schemas/domain/bom.v1.json"
+      template:
+        include_status: true
+
+  scenarios:
+    - name: calculate-bom-happy-path
+      given: "valid frame specification and system exists"
+      when: "CalculateBOM"
+      then:
+        - "Frame validated"
+        - "Components retrieved"
+        - "Formulas evaluated"
+        - "BOM returned with correct totals"
+
+    - name: calculate-bom-invalid-frame
+      given: "invalid frame dimensions or unavailable color"
+      when: "CalculateBOM"
+      then:
+        - "Validation error"
+        - "No formula evaluation"
+        - "No BOM generated"
+
+    - name: calculate-bom-system-not-found
+      given: "systemCode not registered"
+      when: "CalculateBOM"
+      then:
+        - "NotFound error"
+        - "No calculations performed"
+
+    - name: calculate-bom-invalid-formula
+      given: "component contains invalid or un-evaluable formula"
+      when: "CalculateBOM"
+      then:
+        - "Calculation error including component identification"
+
+  deliverables:
+    - "Domain entity: Frame with validation rules"
+    - "Value objects: BOM, BOMLine with calculation attributes"
+    - "Use case handlers: CalculateBOM, ValidateFrameSpec"
+    - "Ports: SystemRegistryPort, ComponentRepositoryPort, FormulaEnginePort"
+    - "Calculation service: Orchestrates system lookup and formula evaluation"
+    - "HTTP controller adapter: Calculation API endpoints"
+    - "OpenAPI calculation definitions"
+    - "UI state model for BOM calculation"
+    - "Tests: validation tests, formula evaluation, scenario-driven tests"
+    - "Error handling rules: validation, system lookup, formula errors"
+
+  packs:
+    - "spec.linting"
+    - "domain.purity"
+    - "ui.state"
+    - "ports.contracts"
+    - "calculation-engine"

@@ -1,0 +1,118 @@
+﻿# example spec for a user registration flow. this spect contains the core sections used to describe the intent of the spec and a important information for its implementation
+spec:
+  id: users.register-user.v1
+  objective: "Allow a new user to register and verify their email address."
+  context: "users"
+
+  # --- reusable rule packs ---
+  packs:
+    - "domain.purity"
+    - "ports.contracts"
+    - "adapters.conformance"
+    - "platform.aspire"
+  
+  # --- non-functional requirements ---
+  nfr:
+    performance: "perf.p95.300ms"
+    reliability: ["msg.delivery.at_least_once"]
+    security: ["sec.api-key.required"]
+
+  # --- contracts section: edge + optional domain schemas ---
+  contracts:
+    # Driving adapter (public HTTP API)
+    openapi: "../contracts/openapi/users.v1.yaml#/paths/~1api~1users~1register"
+
+    # Driven adapters (what we call, persist, or publish)
+    asyncapi:
+      - "../contracts/asyncapi/user-events.v1.yaml#/channels/user.created"
+    schemas:
+      # Domain-level canonical shapes (optional, for documentation or validation)
+      - "../contracts/schemas/domain/user.v1.json"
+      - "../contracts/schemas/domain/email.v1.json"
+      # Persistence & external API schemas
+      - "../contracts/schemas/persistence/user-record.v1.json"
+      - "../contracts/schemas/external/email-provider.v1.json"
+
+  # --- domain scope: core business meaning ---
+  scope:
+    domain:
+      - "Entity: User"
+      - "ValueObject: Email"
+      - "Event: UserRegistered"
+      - "UseCase: RegisterUser(email, password)"
+      - "Invariant: Email must be unique"
+    in:
+      - "HTTP: POST /api/users/register"
+    out:
+      - "Email: SendVerification"
+      - "Event: user.created"
+      - "Persistence: Save UserRecord"
+  
+  # --- presentation ---
+  presentation:
+    routes:
+      - path: "/register"
+        component: "RegisterForm"
+        consumes: "../contracts/schemas/ui/register-form.v1.json"
+        calls: "POST /api/users/register"
+        shows: "register-success, register-error"
+    pages:
+      - "RegisterSuccess"
+      - "RegisterError"
+    interactions:
+      - name: "Submit Registration"
+        from: "RegisterForm"
+        to: "users.register-user.v1"
+        outcome: "UserRegistered → redirect /register/success"
+
+  # --- scenarios (spec-driven tests) ---
+  scenarios:
+    - name: register-happy-path
+      given: "valid email and password"
+      when: "POST /api/users/register"
+      then:
+        - "201 Created with user.id"
+        - "User entity persisted via UserRepositoryPort"
+        - "EmailSenderPort called with verification token"
+        - "UserRegistered event emitted"
+    - name: duplicate-email
+      given: "email already exists"
+      when: "POST /api/users/register"
+      then:
+        - "409 Conflict"
+        - "No event emitted"
+        - "EmailSenderPort not called"
+
+  # --- deliverables / definition of done ---
+  deliverables:
+    - "Domain entities: User, Email"
+    - "Use-case handler: RegisterUserHandler"
+    - "Ports: EmailSenderPort, UserRepositoryPort"
+    - "Adapters: SMTPEmailAdapter, EFUserRepository"
+    - "Contracts: OpenAPI (register), AsyncAPI (user.created)"
+    - "Tests: domain, adapter conformance, e2e"
+
+  # --- implementation hints for agents ---
+  implementation:
+    layout:
+      domain: "src/users.domain"
+      app: "src/users.app"
+      ports: "src/users.ports"
+      adapters: "src/users.adapters"
+    dependencies:
+      - "depends on contract:email-provider.v1"
+      - "uses pack:platform.aspire"
+
+  # --- waivers (if any) ---
+  waivers:
+    - rule: "perf.p95.300ms"
+      reason: "Temporary overhead from SMTP sandbox"
+      owner: "peace@benumtax.com"
+      expiry: "2025-12-31"
+      mitigation: "Switch to async mail service"
+
+  notes: |
+    The domain entity `User` holds verifiedEmail=false until verification event is processed.
+    The DTO `RegisterUserCommand` is an application-level transport, not persisted.
+    The persistence model `UserRecord` maps via `User ↔ UserRecord`.
+    Future: Add reCAPTCHA verification at registration.

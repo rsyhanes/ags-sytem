@@ -1,0 +1,161 @@
+spec:
+  id: systems.design-system.v1
+  context: systems
+
+  domain:
+    problem: |
+      Engineers need the ability to configure architectural systems such as
+      windows, doors, and railings, including category, color availability,
+      configuration options, and size constraints.
+
+    rationale: |
+      A well-defined system catalog enables correct BOM calculation, pricing,
+      ordering, and production workflows. Consistent domain rules ensure
+      manufacturing and architectural correctness.
+
+    concepts:
+      entities:
+        - System(code, category, colors, configurations, sizeConstraints)
+      value_objects:
+        - Category(Window, Door, Railing)
+        - Color(Bronze, White, Anodized)
+        - SizeConstraints(minHeight, maxHeight, minWidth, maxWidth)
+      domain_events:
+        - SystemCreated
+        - SystemUpdated
+
+    rules:
+      must:
+        - "System code must be unique."
+        - "Size constraints must be valid ranges."
+        - "Category must be one of Window, Door, or Railing."
+      cannot:
+        - "Cannot create or update system with invalid size constraints."
+        - "Cannot reference colors not supported by catalog."
+
+    use_case:
+      name: DesignSystem
+      trigger: "Engineer configures or updates a system definition."
+      description: |
+        Provides capabilities to create systems, update them, retrieve them,
+        and list them by category, while enforcing validation rules and
+        persistence of system definitions.
+      steps:
+        - Validate attributes
+        - Validate size constraints
+        - Validate category and color availability
+        - Persist system
+        - Emit domain event
+
+  interactions:
+    inbound:
+      api:
+        - "POST /api/systems"
+        - "PUT /api/systems/{code}"
+        - "GET /api/systems"
+        - "GET /api/systems/{code}"
+      ui: []
+      events: []
+
+    outbound:
+      api_responses:
+        - "201 Created: System created"
+        - "200 OK: System updated"
+        - "200 OK: Systems listed"
+        - "404 NotFound: System not found"
+        - "400 BadRequest: Validation errors"
+      events:
+        - "SystemCreated"
+        - "SystemUpdated"
+      persistence:
+        - "SystemRepositoryPort.Save(system)"
+        - "SystemRepositoryPort.Get(code)"
+        - "SystemRepositoryPort.List()"
+      external_calls: []
+
+  contracts:
+    domain:
+      - "../contracts/schemas/domain/system.v1.json"
+      - "../contracts/schemas/domain/category.v1.json"
+      - "../contracts/schemas/domain/color.v1.json"
+      - "../contracts/schemas/domain/size-constraints.v1.json"
+
+    inbound:
+      - "../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems"
+      - "../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems~1{code}"
+
+    outbound:
+      - "../contracts/schemas/ports/system-repository-port.v1.json"
+      - "../contracts/asyncapi/system-events.v1.yaml#/channels/system.created"
+      - "../contracts/asyncapi/system-events.v1.yaml#/channels/system.updated"
+
+    ui_state:
+      derives_from:
+        request: "../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems"
+        response: "../contracts/schemas/domain/system.v1.json"
+      template:
+        include_status: true
+
+  scenarios:
+    - name: create-system-happy-path
+      given: "valid system attributes and constraints"
+      when: "CreateSystem"
+      then:
+        - "System stored in repository"
+        - "SystemCreated event emitted"
+
+    - name: update-system-happy-path
+      given: "existing system and valid updated fields"
+      when: "UpdateSystem"
+      then:
+        - "System updated"
+        - "SystemUpdated event emitted"
+
+    - name: get-system-happy-path
+      given: "system exists"
+      when: "GetSystem"
+      then:
+        - "System returned as defined"
+
+    - name: list-systems-happy-path
+      given: "multiple systems exist"
+      when: "ListSystems"
+      then:
+        - "All available systems returned"
+
+    - name: list-systems-by-category
+      given: "systems exist with different categories"
+      when: "ListSystems with category filter"
+      then:
+        - "Only systems matching category returned"
+
+    - name: invalid-size-constraints
+      given: "min/max values are reversed or invalid"
+      when: "CreateSystem"
+      then:
+        - "Validation error"
+        - "No persistence"
+
+    - name: system-not-found
+      given: "code does not exist"
+      when: "GetSystem"
+      then:
+        - "NotFound error"
+
+  deliverables:
+    - "Domain entity: System with business validation"
+    - "Value objects: Category, Color, SizeConstraints"
+    - "Use case handlers: CreateSystem, UpdateSystem, ListSystems, GetSystem"
+    - "Port interface: SystemRepositoryPort"
+    - "OpenAPI definitions for system endpoints"
+    - "HTTP controller adapter"
+    - "Repository adapter (stub or real implementation)"
+    - "UI state model for system design"
+    - "Tests: domain rules, use cases, adapters, e2e scenarios"
+    - "Validation: unique codes, category domain rules, size constraints"
+
+  packs:
+    - "spec.linting"
+    - "domain.purity"
+    - "ui.state"
+    - "ports.contracts"

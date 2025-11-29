@@ -14,7 +14,7 @@
         "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -98,7 +98,7 @@
         "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -168,7 +168,7 @@
         "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\BoundedContexts\\ProductDesign\\AGS.WindowsAndDoors.ProductDesign.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -263,7 +263,7 @@
         "outputPath": "D:\\Source\\AGS Windows And Doors\\system\\src\\SharedKernel\\AGS.WindowsAndDoors.SharedKernel\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
-          "C:\\Microsoft\\Xamarin\\NuGet"
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
         ],
         "configFilePaths": [
           "C:\\Users\\renier\\AppData\\Roaming\\NuGet\\NuGet.Config",

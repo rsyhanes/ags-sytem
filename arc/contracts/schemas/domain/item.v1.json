@@ -1,0 +1,12 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ags.system/contracts/domain/item.v1.json",
+  "title": "User",
+  "description": "Canonical domain representation of an item in the system.",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
+    "createdAt": { "type": "string", "format": "date-time" }
+  },
+  "required": ["id", "createdAt"]
+}

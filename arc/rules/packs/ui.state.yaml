@@ -1,0 +1,16 @@
+﻿id: ui.state
+rules:
+  - id: ui.state.must-derive
+    level: MUST
+    desc: "UI state must derive from inbound request + outbound domain shape."
+    check: lint://ui/state/derive
+
+  - id: ui.state.must-match-contracts
+    level: MUST
+    desc: "UI state input/result fields must match contracts one-to-one (extension permitted)."
+    check: lint://ui/state/match
+
+  - id: ui.state.status
+    level: SHOULD
+    desc: "State should include loading/error/success flags."
+    check: lint://ui/state/status"

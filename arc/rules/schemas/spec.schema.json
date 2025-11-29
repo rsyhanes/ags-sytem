@@ -1,0 +1,172 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://benum.systems/arc/schemas/spec.schema.json",
+  "title": "Domain-First Feature Spec Schema",
+  "type": "object",
+  "required": ["spec"],
+  "properties": {
+    "spec": {
+      "type": "object",
+      "required": [
+        "id",
+        "context",
+        "domain",
+        "interactions",
+        "contracts",
+        "scenarios",
+        "deliverables",
+        "packs"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9_.-]+$"
+        },
+
+        "context": {
+          "type": "string",
+          "minLength": 2
+        },
+
+        "domain": {
+          "type": "object",
+          "required": ["problem", "rationale", "use_case"],
+          "properties": {
+            "problem": { "type": "string", "minLength": 5 },
+            "rationale": { "type": "string", "minLength": 5 },
+
+            "concepts": {
+              "type": "object",
+              "properties": {
+                "entities": { "type": "array", "items": { "type": "string" }},
+                "value_objects": { "type": "array", "items": { "type": "string" }},
+                "domain_events": { "type": "array", "items": { "type": "string" }}
+              }
+            },
+
+            "rules": {
+              "type": "object",
+              "properties": {
+                "must": { "type": "array", "items": { "type": "string" }},
+                "cannot": { "type": "array", "items": { "type": "string" }}
+              }
+            },
+
+            "use_case": {
+              "type": "object",
+              "required": ["name", "trigger", "description", "steps"],
+              "properties": {
+                "name": { "type": "string" },
+                "trigger": { "type": "string" },
+                "description": { "type": "string" },
+                "steps": {
+                  "type": "array",
+                  "items": { "type": "string" },
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        },
+
+        "interactions": {
+          "type": "object",
+          "required": ["inbound", "outbound"],
+          "properties": {
+            "inbound": {
+              "type": "object",
+              "properties": {
+                "ui": { "type": "array", "items": { "type": "string" }},
+                "api": { "type": "array", "items": { "type": "string" }},
+                "events": { "type": "array", "items": { "type": "string" }}
+              }
+            },
+            "outbound": {
+              "type": "object",
+              "properties": {
+                "api_responses": { "type": "array", "items": { "type": "string" }},
+                "events": { "type": "array", "items": { "type": "string" }},
+                "persistence": { "type": "array", "items": { "type": "string" }},
+                "external_calls": { "type": "array", "items": { "type": "string" }}
+              }
+            }
+          }
+        },
+
+        "contracts": {
+          "type": "object",
+          "required": ["domain", "inbound", "outbound", "ui_state"],
+          "properties": {
+            "domain": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "inbound": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "outbound": {
+              "type": "array",
+              "items": { "type": "string" }
+            },
+
+            "ui_state": {
+              "type": "object",
+              "required": ["derives_from"],
+              "properties": {
+                "derives_from": {
+                  "type": "object",
+                  "required": ["request", "response"],
+                  "properties": {
+                    "request": { "type": "string" },
+                    "response": { "type": "string" }
+                  }
+                },
+                "template": {
+                  "type": "object",
+                  "properties": {
+                    "include_status": { "type": "boolean" }
+                  }
+                }
+              }
+            }
+          }
+        },
+
+        "scenarios": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["name", "when", "then"],
+            "properties": {
+              "name": { "type": "string" },
+              "given": { "type": "string" },
+              "when": { "type": "string" },
+              "then": {
+                "type": ["array", "string"],
+                "minItems": 1
+              }
+            }
+          }
+        },
+
+        "nfr": {
+          "type": "object"
+        },
+
+        "deliverables": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        },
+
+        "packs": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

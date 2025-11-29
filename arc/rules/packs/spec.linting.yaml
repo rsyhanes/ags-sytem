@@ -1,0 +1,24 @@
+﻿id: spec.linting
+name: Spec Completeness (Domain First)
+desc: "Ensures specs follow the domain-first structure."
+
+rules:
+  - id: domain.section.required
+    level: MUST
+    desc: "Specs must include a full `domain` section with problem, rationale, concepts, rules, and use_case."
+    check: lint://spec/domain-required
+
+  - id: interactions.after.domain
+    level: MUST
+    desc: "The `interactions` section must come after the domain section."
+    check: lint://spec/ordering-interactions
+
+  - id: contracts.structured
+    level: MUST
+    desc: "Contracts must be grouped under domain, inbound, outbound, ui_state."
+    check: lint://spec/contracts-structure
+
+  - id: scenario.domain-aligned
+    level: SHOULD
+    desc: "Each scenario should validate both domain change and outbound effects."
+    check: lint://spec/scenario-domain-aligned

@@ -1,0 +1,11 @@
+﻿asyncapi: 3.0.0
+info:
+  title: Item Events
+  version: v1
+channels:
+  item.created:
+    description: Event emitted when a new item is created.
+    messages:
+      userCreated:
+        payload:
+          $ref: "../schemas/domain/item.v1.json"

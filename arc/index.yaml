@@ -10,6 +10,7 @@ arc:
     test_framework: "xUnit"
 
   locations:
+    templates: "./templates"
     specs: "./specs"
     rules: "./rules"
     contracts: "./contracts"
@@ -32,18 +33,85 @@ arc:
       http_openapi:
         id_pattern: "<context>.openapi.v<version>"
         base_dir: "./contracts/openapi"
+        spec_ref: "contracts.openapi"
         example:
           id: "users.openapi.v1"
           path: "./contracts/openapi/users.v1.yaml"
       messaging_asyncapi:
         id_pattern: "<context>.events.v<version>"
         base_dir: "./contracts/asyncapi"
+        spec_ref: "contracts.asyncapi"
         example:
           id: "todo.events.v1"
           path: "./contracts/asyncapi/todo-events.v1.yaml"
-      schema_json:
+      schemas:
         base_dir: "./contracts/schemas"
-        note: "Used for driven ports (e.g., EmailSenderPort, RepoPort)."
+        domain:
+          id_pattern: "<entity>.v<version>"
+          sub_dir: "domain"
+          spec_ref: "contracts.schemas"
+          purpose: "Canonical business entities and value objects"
+          example:
+            id: "user.v1"
+            path: "./contracts/schemas/domain/user.v1.json"
+        persistence:
+          id_pattern: "<entity>-record.v<version>"
+          sub_dir: "persistence"
+          spec_ref: "contracts.schemas"
+          purpose: "Database-bound models"
+          example:
+            id: "user-record.v1"
+            path: "./contracts/schemas/persistence/user-record.v1.json"
+        external:
+          id_pattern: "<provider>.v<version>"
+          sub_dir: "external"
+          spec_ref: "contracts.schemas"
+          purpose: "3rd-party provider models"
+          example:
+            id: "email-provider.v1"
+            path: "./contracts/schemas/external/email-provider.v1.json"
+        ui:
+          id_pattern: "<form>-form.v<version>"
+          sub_dir: "ui"
+          spec_ref: "contracts.schemas"
+          purpose: "UI → API view models & forms"
+          example:
+            id: "register-form.v1"
+            path: "./contracts/schemas/ui/register-form.v1.json"
+      internal:
+        base_dir: "./contracts/internal"
+        commands:
+          id_pattern: "<action>-<entity>-command.v<version>"
+          sub_dir: "commands"
+          spec_ref: "internal_contracts"
+          purpose: "Input to use cases"
+          example:
+            id: "create-item-command.v1"
+            path: "./contracts/internal/commands/create-item-command.v1.json"
+        results:
+          id_pattern: "<entity>-result.v<version>"
+          sub_dir: "results"
+          spec_ref: "internal_contracts"
+          purpose: "Output from use cases"
+          example:
+            id: "item-result.v1"
+            path: "./contracts/internal/results/item-result.v1.json"
+        queries:
+          id_pattern: "<action>-<entity>-query.v<version>"
+          sub_dir: "queries"
+          spec_ref: "internal_contracts"
+          purpose: "Query DTOs"
+          example:
+            id: "get-item-query.v1"
+            path: "./contracts/internal/queries/get-item-query.v1.json"
+        events:
+          id_pattern: "<entity>.<action>.v<version>"
+          sub_dir: "events"
+          spec_ref: "internal_contracts"
+          purpose: "Internal (non-asyncapi) events"
+          example:
+            id: "item.created.v1"
+            path: "./contracts/internal/events/item.created.v1.json"
 
     # Rule packs
     rules:

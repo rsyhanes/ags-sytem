@@ -1,0 +1,11 @@
+﻿{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ags.system/contracts/dto/create-item-command.v1.json",
+  "title": "CreateItemCommand",
+  "description": "Input DTO for the CreateItem use case.",
+  "type": "object",
+  "properties": {
+    "code": { "type": "string", "format": "email" }
+  },
+  "required": ["code"]
+}
