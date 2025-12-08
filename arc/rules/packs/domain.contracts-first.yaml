@@ -1,0 +1,52 @@
+﻿id: domain.contracts-first
+name: Domain Contracts Are Canonical
+desc: |
+  Ensures that all domain entities, value objects, and domain events reference
+  canonical schemas defined under contracts.domain. Prevents redefining or
+  structuring domain concepts inside the spec.
+
+rules:
+
+  - id: domain.concepts.must-be-semantic-only
+    level: MUST
+    desc: |
+      The domain.concepts section must list names only (semantic intent).
+      It MUST NOT define structure, fields, or internal attributes.
+      All structural definitions MUST be taken from contracts.domain.
+    check: lint://domain/contracts-first/concepts-semantic-only
+
+  - id: domain.concept.must-have-contract
+    level: MUST
+    desc: |
+      Each concept listed under domain.concepts.entities and domain.concepts.value_objects
+      must have a corresponding schema referenced under contracts.domain.
+    check: lint://domain/contracts-first/concept-has-contract
+
+  - id: domain.schemas.cannot-be-overridden
+    level: MUST
+    desc: |
+      Specs must not define or describe domain entity fields or structures
+      outside of the canonical schemas found in contracts.domain.
+      Domain schemas cannot be overridden or redefined in narrative text.
+    check: lint://domain/contracts-first/no-schema-override
+
+  - id: domain.contracts.must-exist
+    level: MUST
+    desc: |
+      contracts.domain must include at least one JSON schema file describing
+      canonical domain entities or value objects for this feature.
+    check: lint://domain/contracts-first/contracts-exist
+
+  - id: domain.events.must-map-to-contracts
+    level: SHOULD
+    desc: |
+      Domain events listed under domain.concepts.domain_events should map to
+      event schemas in contracts.outbound when applicable.
+    check: lint://domain/contracts-first/events-map
+
+  - id: domain.entities.must-align-with-contracts
+    level: SHOULD
+    desc: |
+      Any entity or value object referenced in the use_case steps should appear
+      in both domain.concepts AND in contracts.domain.
+    check: lint://domain/contracts-first/entities-align

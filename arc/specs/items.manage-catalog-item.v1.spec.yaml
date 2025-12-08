@@ -13,9 +13,9 @@ spec:
 
     concepts:
       entities:
-        - Item(code, name, measure)
+        - Item
       value_objects:
-        - Measure(Units, Inches)
+        - Measure
       domain_events:
         - ItemCreated
         - ItemUpdated

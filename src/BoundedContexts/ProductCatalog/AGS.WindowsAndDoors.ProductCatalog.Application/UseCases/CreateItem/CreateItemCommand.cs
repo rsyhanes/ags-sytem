@@ -7,8 +7,6 @@ public record CreateItemCommand(
     string Code,
     string Name,
     string Description,
-    string CategoryName,
-    string CategoryCode,
     decimal Price,
     string? ColorName = null,
     string? ColorHex = null,

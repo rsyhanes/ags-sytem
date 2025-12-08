@@ -6,7 +6,7 @@ You are implementing Step 2 of the hexagonal architecture development process: *
 
 **Prerequisites**: Step 1 is complete - hexagon (domain + application) is implemented and tested.
 
-<detailed_sequence_of_steps>
+---
 
 # Hexagonal Architecture Implementation - Step 2
 ## Real Driver Adapters / Mock Driven Adapters
@@ -52,3 +52,129 @@ public static class [Feature]Endpoints
             .WithOpenApi();
     }
 }
+
+2. **Implement endpoint handlers** that delegate to application use cases:
+   Add the following method to the `[Feature]Endpoints.cs` file:
+
+   ```csharp
+   private static async Task<IResult> [HandlerMethod](IMediator mediator, [RequestType] request)
+   {
+       var command = new [CommandType](/* map request properties */);
+       var result = await mediator.Send(command);
+       return Results.Created($"/api/[resource]/{result.Id}", result);
+   }
+   ```
+
+## 3. Create Mock Driven Adapters
+
+1. **Identify driven ports** in the bounded context domain ports directory:
+   ```xml
+   <list_files>
+   <path>src/BoundedContexts/[BoundedContext]/AGS.WindowsAndDoors.[BoundedContext].Domain/Ports</path>
+   </list_files>
+   ```
+
+2. **Create Mocks folder** in the infrastructure project:
+   ```xml
+   <execute_command>
+   <command>mkdir src/BoundedContexts/[BoundedContext]/AGS.WindowsAndDoors.[BoundedContext].Infrastructure/Mocks</command>
+   <requires_approval>false</requires_approval>
+   </execute_command>
+   ```
+
+3. **Create mock adapter implementations** for each driven port:
+   Create new file: `src/BoundedContexts/[BoundedContext]/AGS.WindowsAndDoors.[BoundedContext].Infrastructure/Mocks/Mock[PortName]Adapter.cs`
+
+   ```csharp
+   using AGS.WindowsAndDoors.[BoundedContext].Domain.Ports;
+
+   namespace AGS.WindowsAndDoors.[BoundedContext].Infrastructure.Mocks;
+
+   public class Mock[PortName]Adapter : I[PortName]Port
+   {
+       private readonly List<[EntityType]> _items = new();
+
+       public async Task<[EntityType]> [MethodName]Async([MethodParameters])
+       {
+           // Mock implementation - return configured test data or defaults
+           return await Task.FromResult([MockReturnValue]);
+       }
+
+       // Additional mock methods for testing scenarios
+   }
+
+   // Example concrete implementation for ProductCatalog:
+   public class MockItemRepositoryAdapter : IItemRepositoryPort
+   {
+       private readonly List<Item> _items = new();
+
+       public async Task<Item> SaveAsync(Item item, CancellationToken ct = default)
+       {
+           _items.Add(item);
+           return await Task.FromResult(item);
+       }
+
+       public async Task<Item?> FindByCodeAsync(string code, CancellationToken ct = default)
+       {
+           return await Task.FromResult(_items.FirstOrDefault(i => i.Code == code));
+       }
+
+       public async Task<IReadOnlyCollection<Item>> FindAllAsync(CancellationToken ct = default)
+       {
+           return await Task.FromResult((IReadOnlyCollection<Item>)_items.AsReadOnly());
+       }
+
+       public async Task<bool> ExistsByCodeAsync(string code, CancellationToken ct = default)
+       {
+           return await Task.FromResult(_items.Any(i => i.Code == code));
+       }
+   }
+   ```
+
+4. **Configure composition root** to optionally use mock adapters for step 2 development:
+
+   In `src/Presentation/Backend/AGS.WindowsAndDoors.WebAPI/Program.cs`, add this configuration block:
+
+   ```csharp
+   // Configure infrastructure adapters based on environment
+   // In Step 2 (Real Drivers + Mock Driven), use mock adapters for isolated testing
+   if (builder.Environment.IsEnvironment("Testing") ||
+       builder.Configuration.GetValue<bool>("UseMockAdapters"))
+   {
+       builder.Services.AddScoped<IItemRepositoryPort, MockItemRepositoryAdapter>();
+       // Register other mock adapters for this bounded context
+   }
+   else
+   {
+       builder.Services.AddScoped<IItemRepositoryPort, SqlItemRepositoryAdapter>();
+       // Register real adapters for production/development
+   }
+   ```
+
+   This allows switching between mock and real adapters via:
+   - Environment variable: `ASPNETCORE_ENVIRONMENT=Testing`
+   - Configuration setting: `UseMockAdapters=true`
+
+## 4. Register and Test Endpoints
+
+1. **Register the new endpoints** in `Program.cs`:
+   ```csharp
+   app.MapControllers();
+   app.Map[Feature]Endpoints();
+   ```
+
+2. **Test the Web API endpoints** with mock-driven adapters:
+   ```xml
+   <execute_command>
+   <command>cd src/Presentation/Backend/AGS.WindowsAndDoors.WebAPI && dotnet run</command>
+   <requires_approval>false</requires_approval>
+   </execute_command>
+   ```
+
+## 5. Verify Step 2 Complete
+
+1. **Test API endpoints** using tools like Postman or curl to ensure they work with mock data
+2. **Run existing unit tests** to ensure the new driver adapters don't break existing functionality
+3. **Validate architecture compliance** by checking that business logic remains in the domain layer
+4. **Confirm mock adapters** can be easily switched with real implementations in the composition root
+5. **Document the Step 2 completion** and prepare for Step 3 (real driven adapters)

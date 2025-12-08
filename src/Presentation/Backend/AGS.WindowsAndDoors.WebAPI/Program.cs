@@ -1,8 +1,21 @@
+using AGS.WindowsAndDoors.WebAPI;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+// Add MediatR for handling use cases
+builder.Services.AddMediatR(cfg =>
+{
+    cfg.RegisterServicesFromAssembly(typeof(AGS.WindowsAndDoors.ProductCatalog.Application.UseCases.CreateItem.CreateItemCommand).Assembly);
+});
+
+// Register infrastructure services
+// For Step 2 (Real Drivers + Mock Driven), use mock adapters for isolated testing
+builder.Services.AddScoped<AGS.WindowsAndDoors.ProductCatalog.Domain.Ports.IItemRepositoryPort, AGS.WindowsAndDoors.ProductCatalog.Infrastructure.Mocks.MockItemRepositoryAdapter>();
+// In Step 3, this would be replaced with real adapter registrations
 
 var app = builder.Build();
 
@@ -14,13 +27,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
+// app.UseAuthorization(); // Will be enabled in Step 3 when implementing authentication
 
-// Items endpoints (ProductCatalog)
-app.MapPost("/api/items", () => Results.Created("/api/items", new { message = "Item created (placeholder)" }));
-app.MapPut("/api/items/{code}", (string code) => Results.Ok(new { message = $"Item {code} updated (placeholder)" }));
-app.MapGet("/api/items", () => Results.Ok(new[] { new { code = "placeholder", name = "Sample Item" } }));
-app.MapGet("/api/items/{code}", (string code) => Results.Ok(new { code, name = "Sample Item", message = "Placeholder response" }));
+// ProductCatalog Items endpoints
+app.MapItemsEndpoints();
 
 // Systems endpoints (ProductDesign)
 app.MapPost("/api/systems", () => Results.Created("/api/systems", new { message = "System created (placeholder)" }));

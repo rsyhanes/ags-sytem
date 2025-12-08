@@ -13,18 +13,14 @@ public class ItemTests
     [Theory, AutoData]
     public void Create_WithValidData_ShouldCreateItem(string code, string name, string description, decimal price)
     {
-        // Arrange
-        var category = Category.Window;
-        
         // Act
-        var item = Item.Create(code, name, description, category, price);
-        
+        var item = Item.Create(code, name, description, price);
+
         // Assert
         item.Should().NotBeNull();
         item.Code.Should().Be(code.Trim().ToUpper());
         item.Name.Should().Be(name.Trim());
         item.Description.Should().Be(description.Trim());
-        item.Category.Should().Be(category);
         item.Price.Should().Be(price);
         item.State.Should().Be(ItemState.Draft);
         item.IsActive.Should().BeFalse(); // Draft items are not active
@@ -38,11 +34,8 @@ public class ItemTests
     [InlineData(null)]
     public void Create_WithInvalidCode_ShouldThrowArgumentException(string? invalidCode)
     {
-        // Arrange
-        var category = Category.Window;
-        
         // Act & Assert
-        var act = () => Item.Create(invalidCode!, "name", "description", category, 100m);
+        var act = () => Item.Create(invalidCode!, "name", "description", 100m);
         act.Should().Throw<ArgumentException>()
            .WithMessage("Item code cannot be empty*");
     }
@@ -53,11 +46,8 @@ public class ItemTests
     [InlineData(null)]
     public void Create_WithInvalidName_ShouldThrowArgumentException(string? invalidName)
     {
-        // Arrange
-        var category = Category.Window;
-        
         // Act & Assert
-        var act = () => Item.Create("CODE123", invalidName!, "description", category, 100m);
+        var act = () => Item.Create("CODE123", invalidName!, "description", 100m);
         act.Should().Throw<ArgumentException>()
            .WithMessage("Item name cannot be empty*");
     }
@@ -65,11 +55,8 @@ public class ItemTests
     [Fact]
     public void Create_WithNegativePrice_ShouldThrowArgumentException()
     {
-        // Arrange
-        var category = Category.Window;
-        
         // Act & Assert
-        var act = () => Item.Create("CODE123", "name", "description", category, -100m);
+        var act = () => Item.Create("CODE123", "name", "description", -100m);
         act.Should().Throw<ArgumentException>()
            .WithMessage("Item price cannot be negative*");
     }

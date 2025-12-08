@@ -7,11 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.8.1" />
     <PackageReference Include="MassTransit.Abstractions" Version="8.2.5" />
-    <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\BoundedContexts\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Application\AGS.WindowsAndDoors.ProductCatalog.Application.csproj" />
+    <ProjectReference Include="..\..\..\BoundedContexts\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Domain\AGS.WindowsAndDoors.ProductCatalog.Domain.csproj" />
+    <ProjectReference Include="..\..\..\BoundedContexts\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Infrastructure\AGS.WindowsAndDoors.ProductCatalog.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

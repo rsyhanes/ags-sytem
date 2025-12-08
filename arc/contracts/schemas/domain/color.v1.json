@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ags.system/contracts/domain/color.v1.json",
+  "title": "Color",
+  "description": "Value object representing a color with name and hex value.",
+  "type": "object",
+  "properties": {
+    "name": { "type": "string", "minLength": 1 },
+    "hexValue": { "type": "string", "pattern": "^#[0-9A-Fa-f]{6}$" }
+  },
+  "required": ["name", "hexValue"]
+}

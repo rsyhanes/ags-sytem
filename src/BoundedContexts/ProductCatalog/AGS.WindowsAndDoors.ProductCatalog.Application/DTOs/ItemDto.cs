@@ -10,22 +10,15 @@ public record ItemDto
     public required string Code { get; init; }
     public required string Name { get; init; }
     public required string Description { get; init; }
-    public required CategoryDto Category { get; init; }
     public required decimal Price { get; init; }
     public ColorDto? Color { get; init; }
     public MeasureDto? Dimensions { get; init; }
     public required string State { get; init; }
     public required DateTime CreatedAt { get; init; }
     public DateTime? ModifiedAt { get; init; }
-    
+
     // Convenience properties
     public bool IsActive => State == "Active";
-}
-
-public record CategoryDto
-{
-    public required string Name { get; init; }
-    public required string Code { get; init; }
 }
 
 public record ColorDto

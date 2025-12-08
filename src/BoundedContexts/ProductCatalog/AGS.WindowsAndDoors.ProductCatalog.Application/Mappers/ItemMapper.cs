@@ -16,11 +16,6 @@ public static class ItemMapper
             Code = item.Code,
             Name = item.Name,
             Description = item.Description,
-            Category = new CategoryDto
-            {
-                Name = item.Category.Name,
-                Code = item.Category.Code
-            },
             Price = item.Price,
             Color = item.Color != null ? new ColorDto
             {

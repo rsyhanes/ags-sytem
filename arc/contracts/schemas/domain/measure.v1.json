@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ags.system/contracts/domain/measure.v1.json",
+  "title": "Measure",
+  "description": "Value object representing a measurement with value and unit.",
+  "type": "object",
+  "properties": {
+    "value": { "type": "number", "minimum": 0 },
+    "unit": { "type": "string", "minLength": 1 }
+  },
+  "required": ["value", "unit"]
+}

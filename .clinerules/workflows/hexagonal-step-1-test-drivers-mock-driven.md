@@ -468,9 +468,9 @@ Before proceeding to Step 2, verify:
 Once Step 1 is complete:
 - The hexagon (domain + application) is fully implemented and tested
 - All driver ports are tested with mock driven adapters
-- You can proceed to **Step 2: Real Driver Adapters / Mock Driven Adapters**
+- Ask for confirmation to proceed to **Step 2: Real Driver Adapters / Mock Driven Adapters**
 
-Invoke the next workflow:
+If confirmed, invoke the next workflow:
 ```
 /hexagonal-step-2-real-drivers-mock-driven.md
 ```

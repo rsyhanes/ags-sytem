@@ -109,7 +109,7 @@ Interactions describe how the domain is driven and how results flow outward.
 
 ## 📄 3. Contracts
 
-Contracts are references to schemas that define the structure of:
+The ONLY canonical representation of domain entities and value objects. Contracts are references to schemas that define the structure of:
 
 - domain shapes
 - inbound inputs (UI/API)

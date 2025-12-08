@@ -25,8 +25,6 @@ public class CreateItemCommandHandlerTests
             Code: "2103",
             Name: "Frame",
             Description: "Window frame component",
-            CategoryName: "Frame", 
-            CategoryCode: "FRAME",
             Price: 25.50m,
             DimensionValue: 10.5m,
             DimensionUnit: "in"
@@ -40,7 +38,6 @@ public class CreateItemCommandHandlerTests
         result.Code.Should().Be("2103");
         result.Name.Should().Be("Frame");
         result.Description.Should().Be("Window frame component");
-        result.Category.Code.Should().Be("FRAME");
         result.Price.Should().Be(25.50m);
         result.State.Should().Be("Draft");
         result.IsActive.Should().BeFalse();
@@ -65,8 +62,6 @@ public class CreateItemCommandHandlerTests
             Code: "2103",
             Name: "Frame",
             Description: "Window frame component",
-            CategoryName: "Frame",
-            CategoryCode: "FRAME",
             Price: 25.50m
         );
 
@@ -95,8 +90,6 @@ public class CreateItemCommandHandlerTests
             Code: code,
             Name: name,
             Description: description,
-            CategoryName: "Frame",
-            CategoryCode: "FRAME",
             Price: price
         );
 
@@ -120,8 +113,6 @@ public class CreateItemCommandHandlerTests
             Code: "2103",
             Name: "Frame",
             Description: "Window frame component",
-            CategoryName: "Frame",
-            CategoryCode: "FRAME",
             Price: 25.50m,
             ColorName: "Bronze",
             ColorHex: "#CD853F"
@@ -148,8 +139,6 @@ public class CreateItemCommandHandlerTests
             Code: "2103",
             Name: "Frame",
             Description: "Window frame component",
-            CategoryName: "Frame",
-            CategoryCode: "FRAME",
             Price: 25.50m
         );
 
@@ -182,8 +171,6 @@ public class CreateItemCommandHandlerTests
             Code: "TEST",
             Name: "Test Item",
             Description: "Test Description",
-            CategoryName: "Test Category",
-            CategoryCode: "TEST",
             Price: 100m
         );
 

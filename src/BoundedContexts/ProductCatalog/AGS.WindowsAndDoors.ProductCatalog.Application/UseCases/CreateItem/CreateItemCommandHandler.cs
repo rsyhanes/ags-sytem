@@ -32,15 +32,11 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, ItemD
                 throw new BusinessRuleViolationException("duplicate.item.code", $"Item with code '{request.Code}' already exists");
             }
 
-            // Create domain objects from request
-            var category = Category.Create(request.CategoryName, request.CategoryCode);
-            
             // Create the item through the domain
             var item = Item.Create(
                 request.Code,
                 request.Name,
                 request.Description,
-                category,
                 request.Price
             );
 

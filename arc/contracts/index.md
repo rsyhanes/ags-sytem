@@ -64,7 +64,6 @@ The `internal` folder is reserved strictly for **application-layer messages** th
 ---
 
 ## 🧱 Conventions
-
 - **File naming:** `feature-name.vX.json` or `feature-name.vX.yaml`  (versioned using `v1`, `v2`, etc.)
 - **Schema versioning:** Each file is self-contained and versioned independently to ensure backward compatibility.
 - **Referencing:** Specs reference contracts **relatively**, e.g.:
