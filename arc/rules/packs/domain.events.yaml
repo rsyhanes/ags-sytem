@@ -3,15 +3,12 @@ rules:
 - id: events.immutable
   level: MUST
   desc: Domain events must be immutable and serializable.
-- id: events.emit-from-transition
-  level: SHOULD
-  desc: Emit domain events from inside domain transitions.
 - id: events.semantic-naming
   level: SHOULD
   desc: Use domain language in event names, reflecting business meaning.
 - id: events.publish-from-app
-  level: SHOULD
-  desc: Publish or persist domain events through the application layer, not infrastructure.
+  level: MUST
+  desc: Publish domain events through the application layer (use case handlers).
 - id: events.rehydrate-ready
   level: MUST
   desc: Include all relevant transition context in events for reconstruction or auditing.

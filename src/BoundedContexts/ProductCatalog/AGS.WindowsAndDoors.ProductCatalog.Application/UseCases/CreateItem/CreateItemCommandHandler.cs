@@ -2,6 +2,7 @@ using MediatR;
 using AGS.WindowsAndDoors.ProductCatalog.Application.DTOs;
 using AGS.WindowsAndDoors.ProductCatalog.Application.Mappers;
 using AGS.WindowsAndDoors.ProductCatalog.Domain.Entities;
+using AGS.WindowsAndDoors.ProductCatalog.Domain.DomainEvents;
 using AGS.WindowsAndDoors.ProductCatalog.Domain.Ports;
 using AGS.WindowsAndDoors.SharedKernel.Domain.ValueObjects;
 using AGS.WindowsAndDoors.SharedKernel.Domain.Exceptions;
@@ -11,14 +12,17 @@ namespace AGS.WindowsAndDoors.ProductCatalog.Application.UseCases.CreateItem;
 /// <summary>
 /// Handles the creation of new catalog items.
 /// Follows application service rules: delegate to domain, return DTOs, catch domain errors.
+/// Publishes ItemCreated domain events upon successful creation.
 /// </summary>
 public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, ItemDto>
 {
     private readonly IItemRepositoryPort _itemRepository;
+    private readonly IPublisher _publisher;
 
-    public CreateItemCommandHandler(IItemRepositoryPort itemRepository)
+    public CreateItemCommandHandler(IItemRepositoryPort itemRepository, IPublisher publisher)
     {
         _itemRepository = itemRepository ?? throw new ArgumentNullException(nameof(itemRepository));
+        _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
     }
 
     public async Task<ItemDto> Handle(CreateItemCommand request, CancellationToken cancellationToken)
@@ -55,6 +59,12 @@ public class CreateItemCommandHandler : IRequestHandler<CreateItemCommand, ItemD
 
             // Delegate to domain port for persistence
             var savedItem = await _itemRepository.SaveAsync(item, cancellationToken);
+
+            // Publish domain event for successful creation
+            await _publisher.Publish(
+                new ItemCreated(savedItem.Code, savedItem.Id),
+                cancellationToken
+            );
 
             // Return DTO
             return ItemMapper.ToDto(savedItem);

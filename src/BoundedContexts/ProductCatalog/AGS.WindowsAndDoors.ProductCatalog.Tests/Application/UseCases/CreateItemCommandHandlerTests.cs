@@ -4,6 +4,7 @@ using Xunit;
 using MediatR;
 using AGS.WindowsAndDoors.ProductCatalog.Application.UseCases.CreateItem;
 using AGS.WindowsAndDoors.ProductCatalog.Domain.Entities;
+using AGS.WindowsAndDoors.ProductCatalog.Domain.DomainEvents;
 using AGS.WindowsAndDoors.ProductCatalog.Domain.Ports;
 using AGS.WindowsAndDoors.ProductCatalog.Tests.TestUtilities.Mocks;
 using AGS.WindowsAndDoors.ProductCatalog.Tests.TestUtilities.Builders;
@@ -19,8 +20,9 @@ public class CreateItemCommandHandlerTests
         // Arrange - Covers spec scenario: create-item-happy-path  
         var repository = MockItemRepository.WithNoItems()
                                          .ThatSavesSuccessfully();
-        
-        var handler = new CreateItemCommandHandler(repository);
+        var publisher = Substitute.For<IPublisher>();
+
+        var handler = new CreateItemCommandHandler(repository, publisher);
         var command = new CreateItemCommand(
             Code: "2103",
             Name: "Frame",
@@ -56,8 +58,9 @@ public class CreateItemCommandHandlerTests
         // Arrange - Covers spec scenario: create-item-duplicate-code
         var existingItem = ItemTestDataBuilder.ValidItemWithCode("2103");
         var repository = MockItemRepository.WithExistingItem(existingItem);
-        
-        var handler = new CreateItemCommandHandler(repository);
+        var publisher = Substitute.For<IPublisher>();
+
+        var handler = new CreateItemCommandHandler(repository, publisher);
         var command = new CreateItemCommand(
             Code: "2103",
             Name: "Frame",
@@ -85,7 +88,8 @@ public class CreateItemCommandHandlerTests
     {
         // Arrange - Covers spec scenario: create-item-invalid-code
         var repository = MockItemRepository.WithNoItems();
-        var handler = new CreateItemCommandHandler(repository);
+        var publisher = Substitute.For<IPublisher>();
+        var handler = new CreateItemCommandHandler(repository, publisher);
         var command = new CreateItemCommand(
             Code: code,
             Name: name,
@@ -107,8 +111,9 @@ public class CreateItemCommandHandlerTests
         // Arrange
         var repository = MockItemRepository.WithNoItems()
                                          .ThatSavesSuccessfully();
-        
-        var handler = new CreateItemCommandHandler(repository);
+        var publisher = Substitute.For<IPublisher>();
+
+        var handler = new CreateItemCommandHandler(repository, publisher);
         var command = new CreateItemCommand(
             Code: "2103",
             Name: "Frame",
@@ -133,8 +138,9 @@ public class CreateItemCommandHandlerTests
         // Arrange
         var repository = MockItemRepository.WithNoItems()
                                          .ThatSavesSuccessfully();
-        
-        var handler = new CreateItemCommandHandler(repository);
+        var publisher = Substitute.For<IPublisher>();
+
+        var handler = new CreateItemCommandHandler(repository, publisher);
         var command = new CreateItemCommand(
             Code: "2103",
             Name: "Frame",
@@ -154,7 +160,8 @@ public class CreateItemCommandHandlerTests
     public void Constructor_WithNullRepository_ShouldThrowArgumentNullException()
     {
         // Act & Assert
-        var act = () => new CreateItemCommandHandler(null!);
+        var publisher = Substitute.For<IPublisher>();
+        var act = () => new CreateItemCommandHandler(null!, publisher);
         act.Should().Throw<ArgumentNullException>()
            .WithMessage("*itemRepository*");
     }
@@ -165,8 +172,9 @@ public class CreateItemCommandHandlerTests
         // Arrange - Verifies app.delegate-only and app.dto-output rules
         var repository = MockItemRepository.WithNoItems()
                                          .ThatSavesSuccessfully();
-        
-        var handler = new CreateItemCommandHandler(repository);
+        var publisher = Substitute.For<IPublisher>();
+
+        var handler = new CreateItemCommandHandler(repository, publisher);
         var command = new CreateItemCommand(
             Code: "TEST",
             Name: "Test Item",

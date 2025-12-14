@@ -1,6 +1,7 @@
 using MediatR;
 using AGS.WindowsAndDoors.ProductCatalog.Application.DTOs;
 using AGS.WindowsAndDoors.ProductCatalog.Application.Mappers;
+using AGS.WindowsAndDoors.ProductCatalog.Domain.DomainEvents;
 using AGS.WindowsAndDoors.ProductCatalog.Domain.Ports;
 using AGS.WindowsAndDoors.SharedKernel.Domain.ValueObjects;
 using AGS.WindowsAndDoors.SharedKernel.Domain.Exceptions;
@@ -10,14 +11,17 @@ namespace AGS.WindowsAndDoors.ProductCatalog.Application.UseCases.UpdateItem;
 /// <summary>
 /// Handles updating existing catalog items.
 /// Follows application service rules: delegate to domain, return DTOs, catch domain errors.
+/// Publishes ItemUpdated domain events upon successful update.
 /// </summary>
 public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, ItemDto>
 {
     private readonly IItemRepositoryPort _itemRepository;
+    private readonly IPublisher _publisher;
 
-    public UpdateItemCommandHandler(IItemRepositoryPort itemRepository)
+    public UpdateItemCommandHandler(IItemRepositoryPort itemRepository, IPublisher publisher)
     {
         _itemRepository = itemRepository ?? throw new ArgumentNullException(nameof(itemRepository));
+        _publisher = publisher ?? throw new ArgumentNullException(nameof(publisher));
     }
 
     public async Task<ItemDto> Handle(UpdateItemCommand request, CancellationToken cancellationToken)
@@ -54,6 +58,12 @@ public class UpdateItemCommandHandler : IRequestHandler<UpdateItemCommand, ItemD
 
             // Delegate to domain port for persistence
             var savedItem = await _itemRepository.SaveAsync(updatedItem, cancellationToken);
+
+            // Publish domain event for successful update
+            await _publisher.Publish(
+                new ItemUpdated(savedItem.Code, savedItem.Id),
+                cancellationToken
+            );
 
             // Return DTO
             return ItemMapper.ToDto(savedItem);
