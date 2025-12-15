@@ -1,0 +1,129 @@
+id: angular.state-management
+rules:
+  # Core State Management Strategy
+  - id: angular.state.signals-primary
+    level: MUST
+    desc: "Use Angular signals as primary state management API - not BehaviorSubjects"
+
+  - id: angular.state.ngrx-signalstore-goto
+    level: MUST
+    desc: "Use @ngrx/signals SignalStore for shared/complex state - eliminate ngxs/ngrx ComponentStore use"
+
+  - id: angular.state.local-signals-simple
+    level: MAY
+    desc: "Use local signals for trivial component-only state - prefer SignalStore for any shared state"
+
+  # SignalStore Composition & Structure (Functional)
+  - id: angular.state.store-signalstore-function
+    level: MUST
+    desc: "Use signalStore() composition function with functional design - no classes, no inheritance"
+
+  - id: angular.state.store-feature-level
+    level: MUST
+    desc: "Create one SignalStore per feature/domain at /data-access folder level"
+
+  - id: angular.state.store-di-root
+    level: MUST
+    desc: "Configure stores with { providedIn: 'root' } for DI registration and tree-shaking"
+
+  - id: angular.state.store-with-state-structure
+    level: MUST
+    desc: "Define state structure with withState() and strong TypeScript interfaces - keep state minimal"
+
+  - id: angular.state.store-computed-reactive
+    level: SHOULD
+    desc: "Use withComputed() for reactive derived values - avoid imperative calculations in templates"
+
+  - id: angular.state.store-methods-mutations
+    level: MUST
+    desc: "Use withMethods() for all operations - sync mutations first, async side effects second"
+
+  - id: angular.state.store-hooks-lifecycle
+    level: MAY
+    desc: "Use withHooks() for store lifecycle management (onInit, onDestroy) - rarely needed"
+
+  # State Design Principles
+  - id: angular.state.interface-strongly-typed
+    level: MUST
+    desc: "Define exhaustive TypeScript interfaces for all state properties - no any"
+
+  - id: angular.state.state-minimal-reactive
+    level: MUST
+    desc: "Keep state minimal but reactive - represent loading/error states explicitly"
+
+  - id: angular.state.immutable-patch-state
+    level: MUST
+    desc: "Use patchState() for immutable updates - never mutate objects/arrays directly"
+
+  # Side Effects & Async Operations
+  - id: angular.state.side-effects-store-only
+    level: MUST
+    desc: "Handle all side effects (HTTP calls, navigation, etc) INSIDE the store - NEVER in components"
+
+  - id: angular.state.components-read-only
+    level: MUST
+    desc: "Components inject stores, READ signals ONLY, and CALL store methods - no direct API calls"
+
+  - id: angular.state.no-rxjs-in-components
+    level: MUST
+    desc: "Components do not handle RxJS - all reactive patterns encapsulated in store"
+
+  # rxMethod Patterns (Ngrx Signal Store Async Standard)
+  - id: angular.state.rxmethod-primary-async
+    level: MUST
+    desc: "Use rxMethod() for all async operations - NEVER manual Subject triggering or Observable exposure"
+
+  - id: angular.state.rxmethod-void-pattern
+    level: MUST
+    desc: "For void/fire-and-forget ops: rxMethod<void>(() => of(null).pipe(tap, switchMap, catchError))"
+
+  - id: angular.state.rxmethod-single-param
+    level: MUST
+    desc: "For single params: rxMethod<Type>((param$) => param$.pipe(tap, switchMap, catchError))"
+
+  - id: angular.state.rxmethod-multi-param
+    level: MUST
+    desc: "For multi params: rxMethod<[T1,T2]>((params$) => params$.pipe(map(([p1,p2]) => [p1,p2]), switchMap, catchError))"
+
+  - id: angular.state.store-methods-callable
+    level: MUST
+    desc: "Store methods callable like regular functions: store.loadItems(), store.createItem(data), store.updateItemByCode([code, updates])"
+
+  # Component Integration (Store-Only)
+  - id: angular.state.component-store-injection
+    level: MUST
+    desc: "Inject stores via Angular DI - always assign to private readonly properties"
+
+  - id: angular.state.component-signal-binding
+    level: MUST
+    desc: "Bind store signals directly to templates (items = store.items) - no manual subscriptions"
+
+  - id: angular.state.component-effect-react
+    level: SHOULD
+    desc: "Use effect() for reactive side effects like navigation - avoid imperative event handling"
+
+  - id: angular.state.component-store-methods-call
+    level: MUST
+    desc: "Trigger all operations by calling store methods - not direct API service calls"
+
+  # Template Best Practices
+  - id: angular.state.template-signal-direct
+    level: MUST
+    desc: "Templates read signals directly - no pipe operators or async pipe needed in most cases"
+
+  - id: angular.state.template-no-effect
+    level: MUST
+    desc: "Keep templates pure - no effects, no direct API calls, no subscription logic"
+
+  # Testing & Maintainability
+  - id: angular.state.store-testable-di
+    level: MUST
+    desc: "Design stores for easy testing with TestBed.inject() - dependency injection friendly"
+
+  - id: angular.state.store-devtools-debug
+    level: MAY
+    desc: "Consider @ngrx/store-devtools integration for development debugging"
+
+  - id: angular.state.store-feature-ownership
+    level: MUST
+    desc: "Each store owns one domain - clear separation of concerns between features"

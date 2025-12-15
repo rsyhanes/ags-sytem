@@ -1,0 +1,29 @@
+id: angular.best-practices
+rules:
+  - id: angular.standalone-components
+    level: MUST
+    desc: "Always use standalone components over NgModules"
+
+  - id: angular.standalone-default
+    level: MUST
+    desc: "Must NOT set standalone: true inside Angular decorators. It's the default in Angular v20+"
+
+  - id: angular.signals-state
+    level: MUST
+    desc: "Use signals for state management"
+
+  - id: angular.lazy-loading
+    level: SHOULD
+    desc: "Implement lazy loading for feature routes"
+
+  - id: angular.no-hostbinding-listener
+    level: MUST
+    desc: "Do NOT use the @HostBinding and @HostListener decorators. Put host bindings inside the host object of the @Component or @Directive decorator instead"
+
+  - id: angular.ng-optimized-image
+    level: MUST
+    desc: "Use NgOptimizedImage for all static images"
+
+  - id: angular.observables-subscriptions
+    level: MUST
+    desc: "Never manually subscribe to Observables in components; use the async pipe instead"

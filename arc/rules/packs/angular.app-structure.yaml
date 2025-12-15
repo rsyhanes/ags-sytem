@@ -1,0 +1,81 @@
+id: angular.app-structure
+rules:
+  - id: angular.structure.no-ngmodules
+    level: MUST
+    desc: "Do not use NgModules in standalone Angular. If you see declarations/imports/providers in a module file, you broke the rule."
+
+  - id: angular.structure.single-integration-point
+    level: MUST
+    desc: "Every feature exposes exactly one integration artifact: [FEATURE].routes.ts exporting [FEATURE]_ROUTES."
+
+  - id: angular.structure.root-no-components
+    level: MUST
+    desc: "Root knows only route entry points. Root should not import feature components directly."
+
+  - id: angular.structure.providers-at-route
+    level: MUST
+    desc: "Feature providers live at route level, not globally: export const [FEATURE]_ROUTES: Routes = [{ path: '', providers: [...], children: [...] }]"
+
+  - id: angular.structure.core-singletons
+    level: MUST
+    desc: "core/ is for app-wide singletons: auth service, logging, interceptors, app shell, and cross-cutting infrastructure."
+
+  - id: angular.structure.shared-dumb-only
+    level: MUST
+    desc: "shared/ is for dumb reusable stuff: UI components, pipes, helpers, directives. No feature-specific logic allowed."
+
+  - id: angular.structure.app-root
+    level: MUST
+    desc: "Organize app in feature-based structure under /app/features/"
+
+  - id: angular.structure.core-folder
+    level: MUST
+    desc: "Create /app/core/ for app-wide singletons, cross-cutting infrastructure, and shared services"
+
+  - id: angular.structure.shared-folder
+    level: MUST
+    desc: "Create /app/shared/ for reusable, stateless UI components, pipes, directives, and utilities"
+
+  - id: angular.structure.shared-ui-components
+    level: MUST
+    desc: "Organize shared UI components as button/button.component.ts with index.ts barrel export"
+
+  - id: angular.structure.feature-organization
+    level: MUST
+    desc: "Organize each feature as: index.ts, [feature].routes.ts, pages/, components/, data-access/, domain/"
+
+  - id: angular.structure.feature-index
+    level: MUST
+    desc: "Each feature must have index.ts that re-exports public API (routes, services, components)"
+
+  - id: angular.structure.feature-routes
+    level: MUST
+    desc: "Each feature must have [feature].routes.ts as the integration point for routing"
+
+  - id: angular.structure.feature-pages
+    level: MUST
+    desc: "Create pages/ folder for route-level components ([feature].page.ts, detail.page.ts)"
+
+  - id: angular.structure.feature-components
+    level: SHOULD
+    desc: "Create components/ folder for feature-specific, reusable components"
+
+  - id: angular.structure.data-access
+    level: MUST
+    desc: "Create data-access/ folder for feature-scoped state management and API services"
+
+  - id: angular.structure.domain-models
+    level: SHOULD
+    desc: "Create domain/ folder for feature types, models, and pure business logic"
+
+  - id: angular.structure.app-config
+    level: MUST
+    desc: "Keep app.config.ts and app.routes.ts at root /app/ level"
+
+  - id: angular.structure.core-subfolders
+    level: SHOULD
+    desc: "Organize core/ with subfolders like http/interceptors, auth/, layout/, config/"
+
+  - id: angular.structure.lib-optional
+    level: SHOULD
+    desc: "Use optional lib/ folder for larger shared libraries as the app grows"

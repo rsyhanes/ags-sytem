@@ -48,7 +48,13 @@ spec:
         - "PUT /api/items/{code}"
         - "GET /api/items"
         - "GET /api/items/{code}"
-      ui: []
+      ui:
+        - "Route: /items (catalog listing with search/filter/pagination)"
+        - "Route: /items/new (create form with validation feedback)"
+        - "Route: /items/{code}/edit (update form pre-populated with existing data)"
+        - "Button interactions: Save, Cancel, Delete (with confirmation dialogs)"
+        - "Form validation: Real-time client-side + server-side error handling"
+        - "Data grid: Sortable, filterable, paginated item listings"
       events: []
 
     outbound:
@@ -90,14 +96,24 @@ spec:
         response: "../contracts/schemas/domain/item.v1.json"
       template:
         include_status: true
+        forms:
+          create_form:
+            fields: [code, name, measure]
+            validation_rules: ["unique_code", "required_fields", "valid_measure"]
+          list_view:
+            filters: [measure, search]
+            pagination: true
+            actions: [create, edit, delete]
 
   scenarios:
+    # Backend API scenarios
     - name: create-item-happy-path
       given: "valid item data (code='2103', name='Frame', measure='Inches')"
       when: "CreateItem"
       then:
         - "Item created and persisted"
         - "ItemRepositoryPort.Save called with item"
+        - "ItemCreated event emitted"
 
     - name: create-item-duplicate-code
       given: "item with existing code"
@@ -118,6 +134,7 @@ spec:
       when: "UpdateItem"
       then:
         - "Item updated and persisted"
+        - "ItemUpdated event emitted"
 
     - name: update-item-not-found
       given: "non-existent item code"
@@ -132,19 +149,116 @@ spec:
       then:
         - "All items returned with proper formatting"
 
+    # Frontend UI scenarios
+    - name: create-item-via-ui-success
+      given: "User on create item page with valid form data"
+      when: "User submits form"
+      then:
+        - "Item created via API call"
+        - "Success notification displayed"
+        - "User redirected to items list"
+        - "Form resets for potential new item creation"
+
+    - name: create-item-ui-validation
+      given: "User attempts to submit invalid form"
+      when: "Form validates"
+      then:
+        - "Validation errors shown inline"
+        - "Submit button disabled"
+        - "Screen reader announces errors"
+        - "Form fields highlighted appropriately"
+
+    - name: list-items-pagination
+      given: "Items exceed page limit"
+      when: "User navigates pagination"
+      then:
+        - "Correct page of items displayed"
+        - "Pagination controls show current state"
+        - "URL reflects current page/filter state"
+
+    - name: item-deletion-confirmation
+      given: "User attempts to delete item"
+      when: "Delete action triggered"
+      then:
+        - "Confirmation dialog appears"
+        - "Item deleted only on confirmation"
+        - "List refreshes to show updated state"
+
+    - name: accessibility-keyboard-navigation
+      given: "User navigates via keyboard only"
+      when: "TAB key pressed through interface"
+      then:
+        - "All interactive elements reachable"
+        - "Focus indicators visible"
+        - "Current element announced by screen reader"
+
+  nfr:
+    performance:
+      - "API responses: P95 < 200ms for all operations"
+      - "List view renders within 100ms with 500+ items"
+      - "Form validation provides immediate feedback (< 50ms)"
+      - "Search/filter operations complete within 150ms"
+    reliability:
+      - "Form submissions retry on transient failures"
+      - "Offline mode for read operations (if applicable)"
+      - "Graceful degradation when API unavailable"
+    usability:
+      - "Forms use progressive disclosure for optional fields"
+      - "Loading states shown during all async operations"
+      - "Clear error messages in business domain language"
+      - "Optimistic UI updates where safe"
+    accessibility:
+      - "All forms comply with WCAG AA standards"
+      - "Screen reader support for all state changes"
+      - "Color contrast meets AA minimums (4.5:1)"
+      - "Keyboard navigation for all interactive elements"
+      - "ARIA labels on all form inputs and controls"
+    security:
+      - "Input validation on both client and server"
+      - "CSRF protection for mutating operations"
+      - "Rate limiting on list/search operations"
+
   deliverables:
+    # Backend Deliverables
     - "Domain entity: Item (code, name, measure) with validation rules"
-    - "Value object: Measure enumeration"
+    - "Value object: Measure enumeration with allowed values"
     - "Use case handlers: CreateItem, UpdateItem, ListItems, GetItem"
-    - "Port interface: ItemRepositoryPort"
-    - "HTTP API (controller) adapter implementation"
-    - "Repository adapter: persistence implementation"
-    - "OpenAPI spec for items endpoints"
-    - "UI state model for item management"
-    - "Tests: domain specs, use case specs, adapter tests, scenario e2e tests"
+    - "Port interface: ItemRepositoryPort methods"
+    - "HTTP API controller adapter with error handling"
+    - "Repository adapter: data persistence implementation"
+    - "OpenAPI spec: Complete API contract definition"
+    - "Event publishing: ItemCreated/ItemUpdated via message bus"
+    - "Tests: Domain entities, use cases, adapters, e2e scenarios"
+
+    # Frontend Deliverables
+    - "Angular feature module: ItemsFeature under /app/features/items/"
+    - "Route configuration: items.routes.ts with lazy loading"
+    - "Page components: ItemsListPage, ItemFormPage (create/update)"
+    - "API service: ItemsApiService with error handling and retry logic"
+    - "Reactive forms: CreateItemForm, UpdateItemForm with validation"
+    - "Signals state: itemsState using NgRx signals for global mgmt"
+    - "Reusable components: ItemCard, LoadingIndicator, ErrorMessage"
+    - "Route guards: ItemExistsGuard, UnsavedChangesGuard"
+    - "Unit tests: Services, components, state management, guards"
+    - "Component tests: Page components with user interaction flows"
+    - "E2E tests: Complete user journeys (create, edit, list, delete)"
+    - "Accessibility tests: Axe scan compliance, keyboard navigation"
+    - "Performance tests: Bundle size checks, runtime performance budgets"
 
   packs:
+    # Core Architecture
     - "spec.linting"
     - "domain.purity"
     - "ui.state"
     - "ports.contracts"
+
+    # Angular Implementation Standards
+    - "angular.app-structure"
+    - "angular.material"
+    - "angular.best-practices"
+    - "angular.components"
+    - "angular.services"
+    - "angular.state-management"
+    - "angular.templates"
+    - "typescript.best-practices"
+    - "accessibility.requirements"

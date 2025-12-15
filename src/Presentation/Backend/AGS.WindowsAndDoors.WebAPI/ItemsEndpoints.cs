@@ -5,6 +5,7 @@ using AGS.WindowsAndDoors.ProductCatalog.Application.UseCases.CreateItem;
 using AGS.WindowsAndDoors.ProductCatalog.Application.UseCases.UpdateItem;
 using AGS.WindowsAndDoors.ProductCatalog.Application.UseCases.GetItem;
 using AGS.WindowsAndDoors.ProductCatalog.Application.UseCases.ListItems;
+using AGS.WindowsAndDoors.SharedKernel.Domain.Exceptions;
 
 namespace AGS.WindowsAndDoors.WebAPI;
 
@@ -60,9 +61,19 @@ public static class ItemsEndpoints
             var response = ToItemResponse(result);
             return Results.Created($"/api/items/{response.Code}", response);
         }
+        catch (BusinessRuleViolationException ex)
+        {
+            // Handle domain business rule violations (e.g., duplicate codes)
+            return Results.Problem(
+                ex.Message,
+                statusCode: (int)HttpStatusCode.Conflict,
+                title: "Business Rule Violation",
+                type: ex.RuleName
+            );
+        }
         catch (Exception ex)
         {
-            // Simplified error handling - in real app, handle specific exceptions
+            // Handle all other exceptions as internal server errors
             return Results.Problem(ex.Message, statusCode: (int)HttpStatusCode.InternalServerError);
         }
     }
@@ -90,6 +101,16 @@ public static class ItemsEndpoints
 
             var response = ToItemResponse(result);
             return Results.Ok(response);
+        }
+        catch (BusinessRuleViolationException ex)
+        {
+            // Handle domain business rule violations
+            return Results.Problem(
+                ex.Message,
+                statusCode: (int)HttpStatusCode.Conflict,
+                title: "Business Rule Violation",
+                type: ex.RuleName
+            );
         }
         catch (Exception ex)
         {

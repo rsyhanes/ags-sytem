@@ -1,0 +1,21 @@
+id: angular.templates
+rules:
+  - id: angular.templates.simple-logic
+    level: MUST
+    desc: "Keep templates simple and avoid complex logic"
+
+  - id: angular.templates.native-control-flow
+    level: MUST
+    desc: "Use native control flow (@if, @for, @switch) instead of *ngIf, *ngFor, *ngSwitch"
+
+  - id: angular.templates.async-pipe
+    level: MUST
+    desc: "Use the async pipe to handle observables"
+
+  - id: angular.templates.no-globals
+    level: MUST
+    desc: "Do not assume globals like (new Date()) are available"
+
+  - id: angular.templates.no-arrow-functions
+    level: MUST
+    desc: "Do not write arrow functions in templates (they are not supported)"

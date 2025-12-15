@@ -122,6 +122,7 @@ arc:
         - "adapters.conformance.yaml"
         - "web-api.yaml"
         - "messaging.yaml"
+        - "angular.material.yaml"
 
     # Code layout for bounded contexts / services (Ports & Adapters Lite)
     layout:

@@ -1,0 +1,9 @@
+id: accessibility.requirements
+rules:
+  - id: accessibility.axe-compliance
+    level: MUST
+    desc: "It MUST pass all AXE checks"
+
+  - id: accessibility.wcag-aa
+    level: MUST
+    desc: "It MUST follow all WCAG AA minimums, including focus management, color contrast, and ARIA attributes"

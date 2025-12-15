@@ -1,0 +1,37 @@
+id: angular.components
+rules:
+  - id: angular.components.single-responsibility
+    level: MUST
+    desc: "Keep components small and focused on a single responsibility"
+
+  - id: angular.components.input-output-functions
+    level: MUST
+    desc: "Use input() and output() functions instead of decorators"
+
+  - id: angular.components.computed-state
+    level: SHOULD
+    desc: "Use computed() for derived state"
+
+  - id: angular.components.onpush-detection
+    level: MUST
+    desc: "Set changeDetection: ChangeDetectionStrategy.OnPush in @Component decorator"
+
+  - id: angular.components.inline-templates
+    level: SHOULD
+    desc: "Prefer inline templates for small components"
+
+  - id: angular.components.reactive-forms
+    level: MUST
+    desc: "Prefer Reactive forms instead of Template-driven ones"
+
+  - id: angular.components.no-ngclass
+    level: MUST
+    desc: "Do NOT use ngClass, use class bindings instead"
+
+  - id: angular.components.no-ngstyle
+    level: MUST
+    desc: "Do NOT use ngStyle, use style bindings instead"
+
+  - id: angular.components.relative-paths
+    level: SHOULD
+    desc: "When using external templates/styles, use paths relative to the component TS file"

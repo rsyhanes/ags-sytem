@@ -1,6 +1,6 @@
-# Spec Completeness Assessment Workflow
+# Spec Completeness Assessment Workflow v2.0
 
-**Purpose:** Analyze implementation completeness against spec requirements, producing cross-layer dependency graphs with completion indicators.
+**Purpose:** Analyze implementation completeness against spec requirements, producing cross-layer dependency graphs with completion indicators. Extended to include frontend layer analysis.
 
 **Input:**
 - `spec_id` - Specification identifier (e.g., `items.manage-catalog-item.v1`)
@@ -20,15 +20,25 @@
 
 ### 2. Architecture Layer Analysis
 
-#### PRESENTATION LAYER (HTTP API)
-**Check:**
+#### PRESENTATION LAYER (HTTP API + Frontend)
+**HTTP API Check:**
 - Endpoint routes match spec's `interactions.inbound.api`
 - Request/Response contracts align with OpenAPI specs
 - Controller actions exist for each CRUD operation
 
+**Frontend Check:**
+- **Routes**: Angular routes match spec's `interactions.inbound.ui` routes and guards
+- **Components**: Feature components implemented (pages, forms, lists as per spec deliverables)
+- **Services**: API services exist with proper error handling and retry logic
+- **State**: Signals/ngrx signals implemented for feature-scoped state management
+- **Forms**: Reactive forms with validation match spec requirements
+- **Accessibility**: ARIA compliance, keyboard navigation, focus management
+- **Performance**: Lazy loading, bundle optimization meet NFR requirements
+
 **Criteria:**
-- ✅ Endpoints implemented and routable
-- ❓ Missing endpoints or incorrect signatures
+- ✅ Endpoints + Components match spec, routes work, API integration complete
+- 🟡 HTTP API complete, frontend partial (stubs exist)
+- ❓ Missing components/services or route configuration
 
 #### APPLICATION LAYER (Use Cases)
 **Check:**
@@ -85,10 +95,9 @@
 
 ### 4. Completion Scoring
 **Per Layer:**
-- Calculate completion percentage based on deliverables vs implementation
-- ✅ 100% = All deliverables implemented and tested
-- 🟡 50-99% = Core functionality complete, minor gaps
-- ❓ 0-49% = Significant implementation missing
+- Presentation = HTTP API (50%) + Frontend (50%) for full-stack evaluation
+- Application/DOMAIN = critical (required)
+- Infrastructure/Testing = supporting (can be mocked)
 
 **Overall Score:**
 - Weighted average across layers
@@ -111,9 +120,10 @@
                       │                                            │ Existing: {contracts}
 ┌─────────────────────┼───────────────────────────────────────────────────────────────┐
 │                     │                                                               │
-│  PRESENTATION      │ {presentation_status}                                │
-│  (HTTP API)        │                                                               │
-│                     │ {presentation_details}                                        │
+│  PRESENTATION      │ {presentation_status}                              │
+│  (HTTP API + UI)   │                                                               │
+│  HTTP API          │ {http_api_details}                                              │
+│  Frontend          │ {frontend_details}                                              │
 ├─────────────────────┼───────────────────────────────────────────────────────────────┤
 │  APPLICATION       │ {application_status}                                │
 │  (Use Cases)       │                                                               │

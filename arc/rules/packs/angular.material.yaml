@@ -1,0 +1,53 @@
+id: angular.material
+rules:
+  - id: angular.material.primary-ui-library
+    level: MUST
+    desc: "Use Angular Material as the primary UI component library for all user-facing components"
+
+  - id: angular.material.prefer-material-components
+    level: MUST
+    desc: "Prefer Angular Material components over custom implementations for buttons (MatButton), forms (MatFormField), tables (MatTable), dialogs (MatDialog), etc."
+
+  - id: angular.material.theming-integration
+    level: MUST
+    desc: "Integrate Material theme with application theming and ensure consistent design tokens across the application"
+
+  - id: angular.material.import-strategy
+    level: MUST
+    desc: "Import only required Material modules per feature (lazy-loaded) to maintain optimal bundle sizes"
+
+  - id: angular.material.accessibility-compliance
+    level: MUST
+    desc: "Leverage Material components' built-in accessibility features (ARIA attributes, keyboard navigation, focus management)"
+
+  - id: angular.material.performance-considerations
+    level: SHOULD
+    desc: "Use Material's performance optimizations like virtual scrolling (CdkVirtualScroll) for large lists and tree shaking support"
+
+  - id: angular.material.form-integration
+    level: MUST
+    desc: "Use MatFormField, MatInput, MatSelect, MatCheckbox for form controls integrated with Angular reactive forms"
+
+  - id: angular.material.table-implementation
+    level: MUST
+    desc: "Implement data tables using MatTable with MatPaginator, MatSort, and MatTableDataSource for sorting/filtering/pagination"
+
+  - id: angular.material.dialog-patterns
+    level: MUST
+    desc: "Use MatDialog for modal dialogs instead of custom modal implementations, with proper backdrop and focus management"
+
+  - id: angular.material.navigation-components
+    level: SHOULD
+    desc: "Use Material navigation components (MatSidenav, MatToolbar, MatMenu) for consistent app navigation and layout"
+
+  - id: angular.material.snackbar-notifications
+    level: SHOULD
+    desc: "Use MatSnackBar for transient notifications instead of custom alert/toast implementations"
+
+  - id: angular.material.elevation-system
+    level: SHOULD
+    desc: "Use Material's elevation system (mat-elevation-z*) for consistent shadow and depth styling"
+
+  - id: angular.material.typography-system
+    level: SHOULD
+    desc: "Leverage Material's typography system for consistent text hierarchy and responsive scaling"

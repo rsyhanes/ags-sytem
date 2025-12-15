@@ -1,0 +1,13 @@
+id: typescript.best-practices
+rules:
+  - id: typescript.strict-checking
+    level: MUST
+    desc: "Use strict type checking in TypeScript configuration"
+
+  - id: typescript.prefer-inference
+    level: SHOULD
+    desc: "Prefer type inference when the type is obvious"
+
+  - id: typescript.avoid-any
+    level: MUST
+    desc: "Avoid the any type; use unknown when type is uncertain"

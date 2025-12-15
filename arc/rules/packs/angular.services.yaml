@@ -1,0 +1,13 @@
+id: angular.services
+rules:
+  - id: angular.services.single-responsibility
+    level: MUST
+    desc: "Design services around a single responsibility"
+
+  - id: angular.services.provided-in-root
+    level: MUST
+    desc: "Use the providedIn: 'root' option for singleton services"
+
+  - id: angular.services.inject-function
+    level: MUST
+    desc: "Use the inject() function instead of constructor injection"
