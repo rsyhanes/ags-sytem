@@ -1,0 +1,220 @@
+spec:
+  id: orders.manage-orders.v1
+  context: orders
+
+  domain:
+    problem: |
+      Order management requires the ability to track submitted orders through
+      their fulfillment lifecycle, providing visibility into order status and
+      details for both customers and internal staff.
+
+    rationale: |
+      Effective order management ensures smooth fulfillment workflows, enables
+      customer service interactions, and provides operational visibility into
+      order processing status and history.
+
+    concepts:
+      entities:
+        - Order
+        - Frame
+      value_objects:
+        - OrderStatus
+        - CustomerInfo
+      domain_events:
+        - OrderStatusUpdated
+
+    rules:
+      must:
+        - "Order status can only transition to valid next states."
+        - "Only authorized users can update order status."
+        - "Order details must remain immutable after submission."
+      cannot:
+        - "Cannot update order status to invalid state."
+        - "Cannot modify order contents after submission."
+        - "Cannot access orders without proper authorization."
+
+    use_case:
+      name: ManageOrders
+      trigger: "User needs to view or update order information."
+      description: |
+        Provides comprehensive order management capabilities including listing
+        orders with filtering, viewing complete order details, and updating
+        order status through the fulfillment workflow.
+      steps:
+        - Authorize user access
+        - Retrieve orders based on filters/criteria
+        - Display order list with key information
+        - Allow detailed order viewing
+        - Enable status updates with validation
+        - Emit status change events
+
+  interactions:
+    inbound:
+      api:
+        - "GET /api/orders (list orders with pagination/filtering)"
+        - "GET /api/orders/{orderId} (get order details)"
+        - "PUT /api/orders/{orderId}/status (update order status)"
+      ui:
+        - "Order management dashboard/list page"
+        - "Order details view/page"
+        - "Status update controls with validation"
+        - "Search and filter controls"
+        - "Order status workflow visualization"
+      events: []
+
+    outbound:
+      api_responses:
+        - "200 OK: Orders listed or details returned"
+        - "200 OK: Status updated successfully"
+        - "404 NotFound: Order not found"
+        - "403 Forbidden: Insufficient permissions"
+        - "400 BadRequest: Invalid status transition"
+      events:
+        - "OrderStatusUpdated"
+      persistence:
+        - "OrderRepositoryPort.FindAll(criteria)"
+        - "OrderRepositoryPort.GetById(orderId)"
+        - "OrderRepositoryPort.UpdateStatus(orderId, status)"
+      external_calls: []
+
+  contracts:
+    domain:
+      - "../contracts/schemas/domain/order.v1.json"
+      - "../contracts/schemas/domain/frame.v1.json"
+      - "../contracts/schemas/domain/order-status.v1.json"
+      - "../contracts/schemas/domain/customer-info.v1.json"
+
+    inbound:
+      - "../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders"
+      - "../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders~1{orderId}"
+      - "../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders~1{orderId}~1status"
+
+    outbound:
+      - "../contracts/schemas/ports/order-repository-port.v1.json"
+      - "../contracts/asyncapi/order-events.v1.yaml#/channels/order.status.updated"
+
+    ui_state:
+      derives_from:
+        request: "../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders"
+        response: "../contracts/schemas/domain/order.v1.json"
+      template:
+        include_status: true
+        order_list:
+          fields: [orderId, customerName, status, createdAt, totalAmount]
+          filters: [status, dateRange, customerName]
+          pagination: true
+          actions: [view_details, update_status]
+        order_details:
+          fields: [orderId, customerInfo, frames, bom, status, statusHistory]
+          actions: [update_status]
+
+  scenarios:
+    - name: list-orders-basic
+      given: "Multiple orders exist in different statuses"
+      when: "ListOrders without filters"
+      then:
+        - "All orders returned with pagination"
+        - "Orders sorted by creation date descending"
+
+    - name: list-orders-filtered
+      given: "Orders exist with various statuses"
+      when: "ListOrders with status=New"
+      then:
+        - "Only New orders returned"
+        - "Other status orders excluded"
+
+    - name: view-order-details
+      given: "Order exists with frames and BOM"
+      when: "GetOrderDetails"
+      then:
+        - "Complete order information returned"
+        - "Includes customer info, frames, and BOM details"
+
+    - name: update-order-status-valid
+      given: "Order in New status"
+      when: "UpdateOrderStatus to InProgress"
+      then:
+        - "Status updated successfully"
+        - "OrderStatusUpdated event emitted"
+
+    - name: update-order-status-invalid
+      given: "Order in Complete status"
+      when: "UpdateOrderStatus to New"
+      then:
+        - "Validation error: invalid status transition"
+        - "Status not updated"
+
+    - name: view-nonexistent-order
+      given: "Order ID does not exist"
+      when: "GetOrderDetails"
+      then:
+        - "NotFound error"
+        - "No order information returned"
+
+    - name: unauthorized-status-update
+      given: "User lacks update permissions"
+      when: "UpdateOrderStatus"
+      then:
+        - "Forbidden error"
+        - "Status not updated"
+
+  nfr:
+    performance:
+      - "Order listing: P95 < 500ms for 1000+ orders"
+      - "Order details retrieval: P95 < 200ms"
+      - "Status updates: P95 < 100ms"
+      - "Search/filter operations complete within 300ms"
+    usability:
+      - "Order list provides clear status indicators"
+      - "Status transitions are intuitive and guided"
+      - "Order details are well-organized and scannable"
+    security:
+      - "Order access requires authentication"
+      - "Status updates audited and logged"
+      - "Customer data access controlled by permissions"
+    reliability:
+      - "Status update operations are atomic"
+      - "Failed updates preserve existing state"
+      - "Audit trail maintained for all changes"
+
+  deliverables:
+    # Backend Deliverables
+    - "Domain entity: Order with status management"
+    - "Value object: OrderStatus with valid transitions"
+    - "Application service: ManageOrdersUseCase, UpdateOrderStatusUseCase"
+    - "Port interfaces: OrderRepositoryPort (read/write operations)"
+    - "HTTP controller adapter: OrderManagementController"
+    - "Authorization service: OrderPermissionsService"
+    - "OpenAPI spec: Order management endpoints"
+    - "Event publishing: OrderStatusUpdated via message bus"
+    - "UI state model for order management"
+    - "Tests: Domain status transitions, authorization, use cases, adapters, scenarios"
+
+    # Frontend Deliverables
+    - "Angular feature module: OrderManagementFeature"
+    - "Route configuration: order-management.routes.ts"
+    - "Page components: OrderListPage, OrderDetailsPage"
+    - "API service: OrderManagementApiService"
+    - "State management: orderManagementState using NgRx signals"
+    - "Reusable components: OrderListTable, OrderStatusBadge, StatusUpdateDialog"
+    - "Route guards: OrderAccessGuard"
+    - "Unit tests: API integration, state management, authorization"
+    - "E2E tests: Order browsing and status update workflows"
+
+  packs:
+    # Core Architecture
+    - "spec.linting"
+    - "domain.purity"
+    - "ui.state"
+    - "ports.contracts"
+
+    # Angular Implementation Standards
+    - "angular.app-structure"
+    - "angular.material"
+    - "angular.best-practices"
+    - "angular.components"
+    - "angular.services"
+    - "angular.state-management"
+    - "angular.templates"
+    - "typescript.best-practices"
+    - "accessibility.requirements"

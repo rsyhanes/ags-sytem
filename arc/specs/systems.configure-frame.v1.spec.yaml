@@ -1,0 +1,206 @@
+spec:
+  id: systems.configure-frame.v1
+  context: systems
+
+  domain:
+    problem: |
+      Customers need to configure specific frame instances based on pre-designed
+      system templates, providing concrete dimensions, color choices, and quantities
+      for ordering.
+
+    rationale: |
+      Frame configuration transforms abstract system templates into concrete,
+      orderable products. This ensures customers can specify exactly what they
+      need while maintaining system integrity and manufacturing constraints.
+
+    concepts:
+      entities:
+        - Frame
+        - System
+      value_objects:
+        - Color
+        - SizeConstraints
+      domain_events:
+        - FrameConfigured
+
+    rules:
+      must:
+        - "Frame dimensions must be within system's size constraints."
+        - "Frame color must be available in the selected system."
+        - "Frame quantity must be positive."
+        - "Frame must reference an existing, active system."
+      cannot:
+        - "Cannot configure frame with invalid dimensions."
+        - "Cannot configure frame with unavailable color."
+        - "Cannot configure frame from inactive system."
+
+    use_case:
+      name: ConfigureFrame
+      trigger: "Customer configures a frame instance from a system template."
+      description: |
+        Validates customer inputs against system constraints and creates a
+        frame configuration that can be used for BOM calculation and ordering.
+      steps:
+        - Validate system exists and is active
+        - Validate dimensions against size constraints
+        - Validate color availability
+        - Validate quantity
+        - Create frame configuration
+        - Emit FrameConfigured event
+
+  interactions:
+    inbound:
+      api:
+        - "POST /api/frames/configure (validate and create frame config)"
+        - "GET /api/frames/validate (validate frame specs without creating)"
+      ui:
+        - "Frame configurator page/form"
+        - "System selection dropdown"
+        - "Dimension inputs (width/height) with validation feedback"
+        - "Color selection dropdown (filtered by system)"
+        - "Quantity input with validation"
+        - "Real-time validation messages"
+        - "Preview of configuration"
+      events: []
+
+    outbound:
+      api_responses:
+        - "200 OK: Frame configuration validated/created"
+        - "400 BadRequest: Validation errors with details"
+        - "404 NotFound: System not found"
+      events:
+        - "FrameConfigured"
+      persistence:
+        - "SystemRepositoryPort.GetByCode(code)"
+        - "FrameRepositoryPort.Save(frame)"  # Optional, for draft saves
+      external_calls: []
+
+  contracts:
+    domain:
+      - "../contracts/schemas/domain/frame.v1.json"
+      - "../contracts/schemas/domain/system.v1.json"
+      - "../contracts/schemas/domain/color.v1.json"
+      - "../contracts/schemas/domain/size-constraints.v1.json"
+
+    inbound:
+      - "../contracts/openapi/frames.v1.yaml#/paths/~1api~1frames~1configure"
+      - "../contracts/openapi/frames.v1.yaml#/paths/~1api~1frames~1validate"
+
+    outbound:
+      - "../contracts/schemas/ports/system-repository-port.v1.json"
+      - "../contracts/schemas/ports/frame-repository-port.v1.json"
+      - "../contracts/asyncapi/frame-events.v1.yaml#/channels/frame.configured"
+
+    ui_state:
+      derives_from:
+        request: "../contracts/openapi/frames.v1.yaml#/paths/~1api~1frames~1configure"
+        response: "../contracts/schemas/domain/frame.v1.json"
+      template:
+        include_status: true
+        configuration_form:
+          fields: [systemCode, width, height, color, quantity]
+          validation_rules: ["system_exists", "dimensions_valid", "color_available", "quantity_positive"]
+          dynamic_filters: ["colors_by_system"]
+
+  scenarios:
+    - name: configure-frame-valid
+      given: "System WF00 exists with constraints minW=10, maxW=100, colors=[White, Bronze]"
+      when: "ConfigureFrame with systemCode=WF00, width=50, height=60, color=White, quantity=2"
+      then:
+        - "Frame configuration validated and created"
+        - "FrameConfigured event emitted"
+        - "Configuration returned for use"
+
+    - name: configure-frame-invalid-dimensions
+      given: "System WF00 with maxWidth=100"
+      when: "ConfigureFrame with width=150"
+      then:
+        - "Validation error: width exceeds maximum"
+        - "No frame created"
+        - "No events emitted"
+
+    - name: configure-frame-invalid-color
+      given: "System WF00 with available colors [White, Bronze]"
+      when: "ConfigureFrame with color=Red"
+      then:
+        - "Validation error: color not available"
+        - "No frame created"
+
+    - name: configure-frame-system-not-found
+      given: "System INVALID does not exist"
+      when: "ConfigureFrame with systemCode=INVALID"
+      then:
+        - "NotFound error"
+        - "No validation performed"
+
+    - name: configure-frame-inactive-system
+      given: "System exists but is inactive"
+      when: "ConfigureFrame"
+      then:
+        - "Validation error: system not available"
+        - "No frame created"
+
+    - name: validate-frame-only
+      given: "Valid frame specifications"
+      when: "ValidateFrameSpecs"
+      then:
+        - "Validation results returned"
+        - "No frame persisted"
+        - "No events emitted"
+
+  nfr:
+    performance:
+      - "Configuration validation: P95 < 100ms"
+      - "Form validation provides immediate feedback (< 50ms)"
+      - "Real-time updates don't impact performance"
+    usability:
+      - "Form guides user through logical steps"
+      - "Clear validation messages in business terms"
+      - "Progressive disclosure of options"
+    reliability:
+      - "Configuration state preserved during navigation"
+      - "Validation errors recoverable without data loss"
+    accessibility:
+      - "Form fully keyboard navigable"
+      - "Screen reader announces validation states"
+      - "High contrast validation indicators"
+
+  deliverables:
+    # Backend Deliverables
+    - "Domain entity: Frame with validation rules"
+    - "Application service: ConfigureFrameUseCase, ValidateFrameUseCase"
+    - "Port interfaces: SystemRepositoryPort, FrameRepositoryPort"
+    - "HTTP controller adapter: FrameConfigurationController"
+    - "OpenAPI spec: Frame configuration endpoints"
+    - "UI state model for configuration workflow"
+    - "Tests: Domain validation, use cases, adapters, scenarios"
+
+    # Frontend Deliverables
+    - "Angular feature module: FrameConfiguratorFeature"
+    - "Route configuration: configurator.routes.ts"
+    - "Page components: FrameConfiguratorPage"
+    - "API service: FrameConfigurationApiService"
+    - "Reactive forms: FrameConfigurationForm with validation"
+    - "State management: configuratorState using NgRx signals"
+    - "Reusable components: DimensionInputs, ColorSelector, QuantityInput"
+    - "Route guards: ConfigurationValidGuard"
+    - "Unit tests: Form validation, API integration, state management"
+    - "E2E tests: Complete configuration workflow"
+
+  packs:
+    # Core Architecture
+    - "spec.linting"
+    - "domain.purity"
+    - "ui.state"
+    - "ports.contracts"
+
+    # Angular Implementation Standards
+    - "angular.app-structure"
+    - "angular.material"
+    - "angular.best-practices"
+    - "angular.components"
+    - "angular.services"
+    - "angular.state-management"
+    - "angular.templates"
+    - "typescript.best-practices"
+    - "accessibility.requirements"

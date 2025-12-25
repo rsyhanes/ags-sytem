@@ -2,6 +2,7 @@
 **/node_modules/
 **/bin/
 **/obj/
+**/.angular/
 
 # Ignore build artifacts in specific projects
 /project-a/dist/

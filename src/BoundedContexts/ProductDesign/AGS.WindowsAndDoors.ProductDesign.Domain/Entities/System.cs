@@ -1,5 +1,7 @@
 using AGS.WindowsAndDoors.SharedKernel.Domain.Interfaces;
 using AGS.WindowsAndDoors.SharedKernel.Domain.ValueObjects;
+using AGS.WindowsAndDoors.ProductDesign.Domain.ValueObjects;
+using SystemCategory = AGS.WindowsAndDoors.ProductDesign.Domain.ValueObjects.Category;
 
 namespace AGS.WindowsAndDoors.ProductDesign.Domain.Entities;
 
@@ -7,22 +9,25 @@ public class System : IAggregateRoot<string>
 {
     private readonly List<IDomainEvent> _domainEvents = [];
     private readonly List<SystemComponent> _components = [];
+    private readonly List<Color> _availableColors = [];
 
     public string Id { get; private set; }
     public string Code { get; private set; }
     public string Name { get; private set; }
     public string Description { get; private set; }
-    public Category Category { get; private set; }
+    public SystemCategory Category { get; private set; }
     public bool IsActive { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public DateTime? ModifiedAt { get; private set; }
-    
+
     public IReadOnlyCollection<IDomainEvent> DomainEvents => _domainEvents.AsReadOnly();
     public IReadOnlyCollection<SystemComponent> Components => _components.AsReadOnly();
+    public IReadOnlyCollection<Color> AvailableColors => _availableColors.AsReadOnly();
+    public SizeConstraints? SizeConstraints { get; private set; }
 
     private System() { } // EF Constructor
 
-    public System(string code, string name, string description, Category category)
+    public System(string code, string name, string description, SystemCategory category)
     {
         if (string.IsNullOrWhiteSpace(code))
             throw new ArgumentException("System code cannot be empty", nameof(code));
@@ -77,6 +82,22 @@ public class System : IAggregateRoot<string>
     public void Deactivate()
     {
         IsActive = false;
+        ModifiedAt = DateTime.UtcNow;
+    }
+
+    public void SetAvailableColors(IEnumerable<Color> colors)
+    {
+        if (colors == null)
+            throw new ArgumentNullException(nameof(colors));
+
+        _availableColors.Clear();
+        _availableColors.AddRange(colors);
+        ModifiedAt = DateTime.UtcNow;
+    }
+
+    public void SetSizeConstraints(SizeConstraints constraints)
+    {
+        SizeConstraints = constraints ?? throw new ArgumentNullException(nameof(constraints));
         ModifiedAt = DateTime.UtcNow;
     }
 

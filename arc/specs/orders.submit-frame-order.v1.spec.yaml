@@ -1,0 +1,212 @@
+spec:
+  id: orders.submit-frame-order.v1
+  context: orders
+
+  domain:
+    problem: |
+      Customers need to submit orders containing configured frame instances with
+      their calculated BOMs, along with customer contact information, to initiate
+      the manufacturing and fulfillment process.
+
+    rationale: |
+      Order submission is the critical bridge between customer configuration
+      and business fulfillment. It ensures all frame specifications are validated,
+      BOMs are calculated, and customer details are captured for processing.
+
+    concepts:
+      entities:
+        - Order
+        - Frame
+      value_objects:
+        - BOM
+        - Money
+        - CustomerInfo
+      domain_events:
+        - OrderSubmitted
+
+    rules:
+      must:
+        - "Order must contain at least one frame."
+        - "All frames in order must be valid configurations."
+        - "Order must include complete customer information."
+        - "Order totals must match calculated BOM costs."
+      cannot:
+        - "Cannot submit order with invalid frame configurations."
+        - "Cannot submit order with incomplete customer information."
+        - "Cannot submit order with uncalculated BOMs."
+
+    use_case:
+      name: SubmitFrameOrder
+      trigger: "Customer submits a complete order with frame configurations."
+      description: |
+        Validates order contents including frame configurations and customer info,
+        ensures BOMs are calculated, computes totals, persists the order,
+        and triggers fulfillment workflows.
+      steps:
+        - Validate customer information completeness
+        - Validate all frame configurations
+        - Ensure BOMs are calculated for all frames
+        - Calculate order totals
+        - Persist order with frames and BOMs
+        - Emit OrderSubmitted event
+
+  interactions:
+    inbound:
+      api:
+        - "POST /api/orders (submit order with frames)"
+      ui:
+        - "Order submission form/page"
+        - "Customer information fields"
+        - "Order summary with frame configurations and BOMs"
+        - "Order total calculation display"
+        - "Submit button with confirmation"
+      events: []
+
+    outbound:
+      api_responses:
+        - "201 Created: Order submitted successfully"
+        - "400 BadRequest: Validation errors"
+        - "422 UnprocessableEntity: Frame validation or BOM calculation errors"
+      events:
+        - "OrderSubmitted"
+      persistence:
+        - "OrderRepositoryPort.Save(order)"
+        - "FrameRepositoryPort.GetById(frameId)"  # For validation
+        - "BOMRepositoryPort.GetByFrameId(frameId)"  # For validation
+      external_calls:
+        - "NotificationServicePort.SendOrderConfirmation(orderId)"
+
+  contracts:
+    domain:
+      - "../contracts/schemas/domain/order.v1.json"
+      - "../contracts/schemas/domain/frame.v1.json"
+      - "../contracts/schemas/domain/bom.v1.json"
+      - "../contracts/schemas/domain/money.v1.json"
+      - "../contracts/schemas/domain/customer-info.v1.json"
+
+    inbound:
+      - "../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders"
+
+    outbound:
+      - "../contracts/schemas/ports/order-repository-port.v1.json"
+      - "../contracts/schemas/ports/frame-repository-port.v1.json"
+      - "../contracts/schemas/ports/bom-repository-port.v1.json"
+      - "../contracts/schemas/ports/notification-service-port.v1.json"
+      - "../contracts/asyncapi/order-events.v1.yaml#/channels/order.submitted"
+
+    ui_state:
+      derives_from:
+        request: "../contracts/openapi/orders.v1.yaml#/paths/~1api~1orders"
+        response: "../contracts/schemas/domain/order.v1.json"
+      template:
+        include_status: true
+        order_form:
+          fields: [customerName, customerEmail, customerPhone, shippingAddress, frames]
+          validation_rules: ["customer_info_complete", "frames_valid", "boms_calculated"]
+
+  scenarios:
+    - name: submit-frame-order-happy-path
+      given: "Valid customer info and multiple valid frame configurations with calculated BOMs"
+      when: "SubmitFrameOrder"
+      then:
+        - "Order validated and persisted"
+        - "OrderRepositoryPort.Save called"
+        - "OrderSubmitted event emitted"
+        - "Order confirmation notification sent"
+
+    - name: submit-order-incomplete-customer-info
+      given: "Order with missing customer email"
+      when: "SubmitFrameOrder"
+      then:
+        - "Validation error: incomplete customer information"
+        - "No persistence"
+        - "No events emitted"
+
+    - name: submit-order-invalid-frame
+      given: "Order contains frame with invalid dimensions"
+      when: "SubmitFrameOrder"
+      then:
+        - "Validation error: invalid frame configuration"
+        - "No persistence"
+        - "No events emitted"
+
+    - name: submit-order-without-bom
+      given: "Order contains frame without calculated BOM"
+      when: "SubmitFrameOrder"
+      then:
+        - "Validation error: BOM not calculated"
+        - "No persistence"
+
+    - name: submit-order-empty
+      given: "Order with no frames"
+      when: "SubmitFrameOrder"
+      then:
+        - "Validation error: no frames in order"
+        - "No persistence"
+
+    - name: submit-order-calculation-mismatch
+      given: "Order totals don't match BOM calculations"
+      when: "SubmitFrameOrder"
+      then:
+        - "Validation error: total mismatch"
+        - "No persistence"
+
+  nfr:
+    performance:
+      - "Order submission: P95 < 500ms for orders with 10 frames"
+      - "Validation completes within 200ms"
+      - "Order confirmation sent within 1 second"
+    reliability:
+      - "Order submission is idempotent (duplicate prevention)"
+      - "Failed submissions preserve customer input"
+      - "Notification failures don't block order creation"
+    usability:
+      - "Clear order summary before submission"
+      - "Progressive form validation"
+      - "Order confirmation provides next steps"
+    security:
+      - "Customer data validated and sanitized"
+      - "Order submission requires authentication"
+      - "Audit trail for order modifications"
+
+  deliverables:
+    # Backend Deliverables
+    - "Domain entity: Order with frame relationships"
+    - "Value objects: CustomerInfo, Money"
+    - "Application service: SubmitFrameOrderUseCase"
+    - "Port interfaces: OrderRepositoryPort, FrameRepositoryPort, BOMRepositoryPort, NotificationServicePort"
+    - "HTTP controller adapter: OrderSubmissionController"
+    - "OpenAPI spec: Order submission endpoints"
+    - "Event publishing: OrderSubmitted via message bus"
+    - "UI state model for order submission"
+    - "Tests: Domain validation, use cases, adapters, scenarios"
+
+    # Frontend Deliverables
+    - "Angular feature module: OrderSubmissionFeature"
+    - "Route configuration: order.routes.ts"
+    - "Page components: OrderSubmissionPage, OrderSummaryPage"
+    - "API service: OrderSubmissionApiService"
+    - "Reactive forms: OrderSubmissionForm with validation"
+    - "State management: orderState using NgRx signals"
+    - "Reusable components: CustomerInfoForm, FrameSummaryCard, OrderTotalDisplay"
+    - "Route guards: FramesConfiguredGuard"
+    - "Unit tests: Form validation, API integration, state management"
+    - "E2E tests: Complete order submission workflow"
+
+  packs:
+    # Core Architecture
+    - "spec.linting"
+    - "domain.purity"
+    - "ui.state"
+    - "ports.contracts"
+
+    # Angular Implementation Standards
+    - "angular.app-structure"
+    - "angular.material"
+    - "angular.best-practices"
+    - "angular.components"
+    - "angular.services"
+    - "angular.state-management"
+    - "angular.templates"
+    - "typescript.best-practices"
+    - "accessibility.requirements"

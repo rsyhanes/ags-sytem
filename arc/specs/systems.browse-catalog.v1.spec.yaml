@@ -1,0 +1,180 @@
+spec:
+  id: systems.browse-catalog.v1
+  context: systems
+
+  domain:
+    problem: |
+      Customers need to browse available pre-designed system templates to understand
+      what products are available for frame configuration and ordering.
+
+    rationale: |
+      A clear system catalog enables customers to make informed decisions about
+      which system templates to use for their frame configurations, ensuring
+      they select appropriate products for their architectural needs.
+
+    concepts:
+      entities:
+        - System
+      value_objects:
+        - Category
+        - Color
+        - SizeConstraints
+      domain_events: []
+
+    rules:
+      must:
+        - "Only active systems are displayed in the catalog."
+        - "Systems are filtered by category when requested."
+      cannot:
+        - "Cannot display inactive or non-existent systems."
+        - "Cannot modify systems through the catalog interface."
+
+    use_case:
+      name: BrowseSystemCatalog
+      trigger: "Customer browses available system templates."
+      description: |
+        Provides read-only access to active system templates, allowing customers
+        to view system details including categories, available colors, and size
+        constraints for informed configuration decisions.
+      steps:
+        - Retrieve active systems from catalog
+        - Apply category filtering if specified
+        - Return system summaries for browsing
+
+  interactions:
+    inbound:
+      api:
+        - "GET /api/systems (list all active systems)"
+        - "GET /api/systems?category={category} (filter by category)"
+        - "GET /api/systems/{code} (get system details)"
+      ui:
+        - "System catalog page with grid/list view"
+        - "Category filter dropdown"
+        - "System detail modal/page"
+        - "Search functionality by system code or name"
+      events: []
+
+    outbound:
+      api_responses:
+        - "200 OK: List of system summaries"
+        - "200 OK: Single system details"
+        - "404 NotFound: System not found"
+      events: []
+      persistence:
+        - "SystemRepositoryPort.GetActiveSystems()"
+        - "SystemRepositoryPort.GetByCategory(category)"
+        - "SystemRepositoryPort.GetByCode(code)"
+      external_calls: []
+
+  contracts:
+    domain:
+      - "../contracts/schemas/domain/system.v1.json"
+      - "../contracts/schemas/domain/category.v1.json"
+      - "../contracts/schemas/domain/color.v1.json"
+      - "../contracts/schemas/domain/size-constraints.v1.json"
+
+    inbound:
+      - "../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems"
+      - "../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems~1{code}"
+
+    outbound:
+      - "../contracts/schemas/ports/system-repository-port.v1.json"
+
+    ui_state:
+      derives_from:
+        request: "../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems"
+        response: "../contracts/schemas/domain/system.v1.json"
+      template:
+        include_status: true
+        catalog_view:
+          fields: [code, name, category, availableColors, sizeConstraints]
+          filters: [category, search]
+          pagination: true
+          actions: [view_details, configure_frame]
+
+  scenarios:
+    - name: browse-all-systems
+      given: "Multiple active systems exist across categories"
+      when: "BrowseSystemCatalog without filters"
+      then:
+        - "All active systems returned"
+        - "Systems ordered by category then name"
+
+    - name: browse-systems-by-category
+      given: "Active systems exist in Window category"
+      when: "BrowseSystemCatalog with category=Window"
+      then:
+        - "Only Window systems returned"
+        - "Door and Railing systems excluded"
+
+    - name: view-system-details
+      given: "System WF00 exists and is active"
+      when: "GetSystemDetails for WF00"
+      then:
+        - "Complete system details returned"
+        - "Includes colors and size constraints"
+
+    - name: browse-inactive-system
+      given: "System exists but is inactive"
+      when: "BrowseSystemCatalog"
+      then:
+        - "Inactive system not included in results"
+
+    - name: browse-nonexistent-category
+      given: "No systems in InvalidCategory"
+      when: "BrowseSystemCatalog with category=InvalidCategory"
+      then:
+        - "Empty list returned"
+        - "No error thrown"
+
+  nfr:
+    performance:
+      - "API responses: P95 < 300ms for catalog browsing"
+      - "Catalog page renders within 500ms with 100+ systems"
+      - "Search/filter operations complete within 200ms"
+    usability:
+      - "Catalog displays systems in logical groupings"
+      - "System details are clearly presented"
+      - "Filter controls are intuitive and responsive"
+    accessibility:
+      - "Catalog complies with WCAG AA standards"
+      - "Keyboard navigation through system list"
+      - "Screen reader support for system details"
+
+  deliverables:
+    # Backend Deliverables
+    - "Application service: BrowseSystemCatalogUseCase"
+    - "Port interface: SystemRepositoryPort (read operations)"
+    - "HTTP controller adapter: SystemCatalogController"
+    - "Repository adapter: System catalog data access"
+    - "OpenAPI spec: System catalog endpoints"
+    - "UI state model for catalog browsing"
+    - "Tests: Domain rules, use cases, adapters, scenarios"
+
+    # Frontend Deliverables
+    - "Angular feature module: SystemCatalogFeature"
+    - "Route configuration: catalog.routes.ts"
+    - "Page components: SystemCatalogPage, SystemDetailPage"
+    - "API service: SystemCatalogApiService"
+    - "State management: catalogState using NgRx signals"
+    - "Reusable components: SystemCard, CategoryFilter, SearchBar"
+    - "Unit tests: Services, components, state management"
+    - "E2E tests: Browse and filter user journeys"
+
+  packs:
+    # Core Architecture
+    - "spec.linting"
+    - "domain.purity"
+    - "ui.state"
+    - "ports.contracts"
+
+    # Angular Implementation Standards
+    - "angular.app-structure"
+    - "angular.material"
+    - "angular.best-practices"
+    - "angular.components"
+    - "angular.services"
+    - "angular.state-management"
+    - "angular.templates"
+    - "typescript.best-practices"
+    - "accessibility.requirements"

@@ -9,7 +9,6 @@ public class SystemComponent : IEntity<string>
     public string Name { get; private set; }
     public string Description { get; private set; }
     public string ItemCode { get; private set; }
-    public Category Category { get; private set; }
     public int Quantity { get; private set; }
     public string? LengthFormula { get; private set; }
     public Measure? FixedLength { get; private set; }
@@ -36,7 +35,6 @@ public class SystemComponent : IEntity<string>
         Name = name.Trim();
         Description = description?.Trim() ?? string.Empty;
         ItemCode = itemCode.Trim().ToUpper();
-        Category = category;
         Quantity = quantity;
         IsRequired = isRequired;
         SortOrder = sortOrder;
