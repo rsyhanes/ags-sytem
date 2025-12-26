@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ags.system/contracts/domain/size-constraints.v1.json",
+  "title": "SizeConstraints",
+  "description": "Value object defining minimum and maximum size constraints for systems.",
+  "type": "object",
+  "properties": {
+    "minHeight": { "type": "number", "minimum": 0 },
+    "maxHeight": { "type": "number", "minimum": 0 },
+    "minWidth": { "type": "number", "minimum": 0 },
+    "maxWidth": { "type": "number", "minimum": 0 }
+  },
+  "required": ["minHeight", "maxHeight", "minWidth", "maxWidth"]
+}

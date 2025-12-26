@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://ags.system/contracts/domain/system-component.v1.json",
+  "title": "SystemComponent",
+  "description": "Entity representing a component within a system configuration.",
+  "type": "object",
+  "properties": {
+    "id": { "type": "string" },
+    "name": { "type": "string", "minLength": 1 },
+    "description": { "type": "string" },
+    "itemCode": { "type": "string", "pattern": "^[a-zA-Z0-9_-]+$" },
+    "quantity": { "type": "integer", "minimum": 1 },
+    "lengthFormula": { "type": "string" },
+    "fixedLength": { "$ref": "measure.v1.json" },
+    "isRequired": { "type": "boolean" },
+    "sortOrder": { "type": "integer", "minimum": 0 },
+    "createdAt": { "type": "string", "format": "date-time" },
+    "modifiedAt": { "type": "string", "format": "date-time" }
+  },
+  "required": ["id", "name", "itemCode", "quantity", "isRequired", "sortOrder", "createdAt"]
+}

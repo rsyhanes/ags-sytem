@@ -1,0 +1,216 @@
+spec:
+  id: systems.manage-components.v1
+  context: systems
+
+  domain:
+    problem: |
+      Systems are composed of multiple components that reference catalog items.
+      Engineers need to manage which components make up each system, including
+      quantities, dimensions, and assembly requirements.
+
+    rationale: |
+      System components bridge system templates with catalog items, enabling
+      proper BOM calculation and manufacturing. Component management ensures
+      systems are correctly assembled from available building parts.
+
+    concepts:
+      entities:
+        - SystemComponent(id, systemCode, itemCode, quantity, dimensions)
+        - System(code)  # Reference to system templates
+      value_objects:
+        - ComponentDimensions(lengthFormula, fixedLength)
+      domain_events:
+        - SystemComponentAdded
+        - SystemComponentUpdated
+        - SystemComponentRemoved
+
+    rules:
+      must:
+        - "Component must reference existing system."
+        - "Component must reference valid catalog item."
+        - "Quantity must be positive integer."
+        - "Required components cannot be removed if system has dependencies."
+        - "Component sort order must be unique within system."
+      cannot:
+        - "Cannot add component with invalid item reference."
+        - "Cannot remove required component from active system."
+        - "Cannot duplicate components (same item) in same system."
+
+    use_case:
+      name: ManageSystemComponents
+      trigger: "Engineer adds, updates, or removes components from a system."
+      description: |
+        Provides CRUD operations for system components, ensuring system
+        composition integrity and catalog item availability.
+      steps:
+        - Validate system exists
+        - Validate item exists in catalog
+        - Check component constraints
+        - Persist component changes
+        - Emit domain event
+
+  interactions:
+    inbound:
+      api:
+        - "POST /api/systems/{systemCode}/components"
+        - "PUT /api/systems/{systemCode}/components/{componentId}"
+        - "DELETE /api/systems/{systemCode}/components/{componentId}"
+        - "GET /api/systems/{systemCode}/components"
+        - "GET /api/systems/{systemCode}/components/{componentId}"
+      ui:
+        - "System component management page"
+        - "Component list with add/edit/remove actions"
+        - "Item selection dropdown (filtered by catalog)"
+        - "Quantity and dimension inputs"
+        - "Required flag and sort order controls"
+        - "Drag-and-drop reordering interface"
+      events: []
+
+    outbound:
+      api_responses:
+        - "201 Created: Component added"
+        - "200 OK: Component updated/deleted"
+        - "200 OK: Components listed"
+        - "404 NotFound: System or component not found"
+        - "400 BadRequest: Validation errors"
+        - "409 Conflict: Item already exists in system"
+      events:
+        - "SystemComponentAdded"
+        - "SystemComponentUpdated"
+        - "SystemComponentRemoved"
+      persistence:
+        - "SystemRepositoryPort.GetByCode(code)"
+        - "SystemComponentRepositoryPort.Save(component)"
+        - "SystemComponentRepositoryPort.FindBySystem(systemCode)"
+        - "SystemComponentRepositoryPort.FindById(componentId)"
+        - "SystemComponentRepositoryPort.Delete(componentId)"
+        - "ItemRepositoryPort.Exists(itemCode)"  # External call to catalog
+      external_calls:
+        - "ItemCatalogService.ValidateItemExists(itemCode)"
+
+  contracts:
+    domain:
+      - "../contracts/schemas/domain/system-component.v1.json"
+      - "../contracts/schemas/domain/system.v1.json"
+      - "../contracts/schemas/domain/item.v1.json"
+
+    inbound:
+      - "../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems~1{systemCode}~1components"
+      - "../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems~1{systemCode}~1components~1{componentId}"
+
+    outbound:
+      - "../contracts/schemas/ports/system-repository.v1.json"
+      - "../contracts/schemas/ports/system-component-repository.v1.json"
+      - "../contracts/asyncapi/system-component-events.v1.yaml#/channels/component.added"
+      - "../contracts/asyncapi/system-component-events.v1.yaml#/channels/component.updated"
+      - "../contracts/asyncapi/system-component-events.v1.yaml#/channels/component.removed"
+
+    ui_state:
+      derives_from:
+        request: "../contracts/openapi/systems.v1.yaml#/paths/~1api~1systems~1{systemCode}~1components"
+        response: "../contracts/schemas/domain/system-component.v1.json"
+      template:
+        include_status: true
+        component_management:
+          fields: [itemCode, quantity, lengthFormula, fixedLength, isRequired, sortOrder]
+          validation_rules: ["system_exists", "item_exists", "quantity_positive", "unique_item_per_system"]
+          features: ["drag_drop_reorder", "bulk_operations"]
+
+  scenarios:
+    - name: add-component-happy-path
+      given: "System WF00 exists, Item 2103 exists in catalog"
+      when: "AddComponent with itemCode=2103, quantity=4, isRequired=true"
+      then:
+        - "Component added to system"
+        - "SystemComponentAdded event emitted"
+        - "Component returned with generated ID"
+
+    - name: add-component-invalid-item
+      given: "System exists, Item INVALID does not exist"
+      when: "AddComponent with itemCode=INVALID"
+      then:
+        - "Validation error: item not found"
+        - "No component created"
+
+    - name: add-component-duplicate-item
+      given: "System WF00 has component with Item 2103"
+      when: "AddComponent with same itemCode=2103"
+      then:
+        - "Conflict error: item already in system"
+        - "No duplicate component created"
+
+    - name: update-component-happy-path
+      given: "Component exists with quantity=2"
+      when: "UpdateComponent with quantity=6"
+      then:
+        - "Component updated"
+        - "SystemComponentUpdated event emitted"
+
+    - name: remove-component-happy-path
+      given: "Optional component exists"
+      when: "RemoveComponent"
+      then:
+        - "Component removed"
+        - "SystemComponentRemoved event emitted"
+
+    - name: remove-required-component
+      given: "Required component exists in active system"
+      when: "RemoveComponent"
+      then:
+        - "Validation error: cannot remove required component"
+        - "Component not removed"
+
+    - name: reorder-components
+      given: "System has components with sortOrder 1,2,3"
+      when: "Update sort orders to 3,1,2"
+      then:
+        - "Components reordered"
+        - "Sort orders updated in repository"
+
+    - name: list-system-components
+      given: "System has 3 components"
+      when: "ListComponents for system"
+      then:
+        - "All components returned sorted by sortOrder"
+        - "Complete component details included"
+
+  nfr:
+    performance:
+      - "Component operations: P95 < 150ms"
+      - "Component listing: P95 < 200ms with 50+ components"
+    reliability:
+      - "Component changes are transactional"
+      - "Catalog item validation is cached"
+    usability:
+      - "Component management follows system design workflow"
+      - "Clear feedback for validation errors"
+    security:
+      - "Component changes audited"
+      - "Catalog integration has timeout/circuit breaker"
+
+  deliverables:
+    - "Domain entity: SystemComponent with business validation"
+    - "Value object: ComponentDimensions with formula validation"
+    - "Use case handlers: AddComponent, UpdateComponent, RemoveComponent, ListComponents"
+    - "Port interfaces: SystemRepositoryPort, SystemComponentRepositoryPort"
+    - "HTTP controller adapter with component CRUD endpoints"
+    - "Repository adapter: component persistence implementation"
+    - "OpenAPI spec: Component management endpoints"
+    - "Event publishing: ComponentAdded/Updated/Removed events"
+    - "Catalog integration: Item validation service"
+    - "Tests: Component domain rules, use cases, adapters, e2e scenarios"
+    - "UI state model for component management workflow"
+
+  packs:
+    - "spec.linting"
+    - "domain.purity"
+    - "ports.contracts"
+    - "adapters.conformance"
+    - "infrastructure.persistence"
+    - "mapping.layer"
+    - "testing.unit.autofixture"
+    - "tests.unit"
+    - "angular.app-structure"
+    - "angular.components"
+    - "angular.services"
+    - "accessibility.requirements"
