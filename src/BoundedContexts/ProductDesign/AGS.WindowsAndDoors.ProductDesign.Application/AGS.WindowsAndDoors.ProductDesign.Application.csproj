@@ -10,10 +10,12 @@
     <PackageReference Include="MassTransit.Abstractions" Version="8.2.5" />
     <PackageReference Include="LanguageExt.Core" Version="4.4.8" />
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="MediatR" Version="12.2.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="../AGS.WindowsAndDoors.ProductDesign.Domain/AGS.WindowsAndDoors.ProductDesign.Domain.csproj" />
+    <ProjectReference Include="..\..\ProductCatalog\AGS.WindowsAndDoors.ProductCatalog.Domain\AGS.WindowsAndDoors.ProductCatalog.Domain.csproj" />
   </ItemGroup>
 
 </Project>

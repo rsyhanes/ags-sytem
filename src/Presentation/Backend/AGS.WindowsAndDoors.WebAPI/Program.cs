@@ -10,11 +10,14 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddMediatR(cfg =>
 {
     cfg.RegisterServicesFromAssembly(typeof(AGS.WindowsAndDoors.ProductCatalog.Application.UseCases.CreateItem.CreateItemCommand).Assembly);
+    cfg.RegisterServicesFromAssembly(typeof(AGS.WindowsAndDoors.ProductDesign.Application.UseCases.AddComponent.AddComponentCommand).Assembly);
 });
 
 // Register infrastructure services
 // For Step 2 (Real Drivers + Mock Driven), use mock adapters for isolated testing
-builder.Services.AddScoped<AGS.WindowsAndDoors.ProductCatalog.Domain.Ports.IItemRepositoryPort, AGS.WindowsAndDoors.ProductCatalog.Infrastructure.Mocks.MockItemRepositoryAdapter>();
+builder.Services.AddScoped<AGS.WindowsAndDoors.ProductCatalog.Domain.Ports.IItemRepositoryPort, AGS.WindowsAndDoors.WebAPI.Mocks.MockItemRepository>();
+builder.Services.AddScoped<AGS.WindowsAndDoors.ProductDesign.Domain.Ports.ISystemRepositoryPort, AGS.WindowsAndDoors.WebAPI.Mocks.MockSystemRepository>();
+builder.Services.AddScoped<AGS.WindowsAndDoors.ProductDesign.Domain.Ports.ISystemComponentRepositoryPort, AGS.WindowsAndDoors.WebAPI.Mocks.MockSystemComponentRepository>();
 // In Step 3, this would be replaced with real adapter registrations
 
 var app = builder.Build();
@@ -32,17 +35,16 @@ app.UseHttpsRedirection();
 // ProductCatalog Items endpoints
 app.MapItemsEndpoints();
 
-// Systems endpoints (ProductDesign)
+// ProductDesign Components endpoints
+app.MapComponentsEndpoints();
+
+// Systems endpoints (ProductDesign) - TODO: Implement full CRUD
 app.MapPost("/api/systems", () => Results.Created("/api/systems", new { message = "System created (placeholder)" }));
 app.MapPut("/api/systems/{code}", (string code) => Results.Ok(new { message = $"System {code} updated (placeholder)" }));
 app.MapGet("/api/systems", () => Results.Ok(new[] { new { code = "placeholder", category = "Window" } }));
 app.MapGet("/api/systems/{code}", (string code) => Results.Ok(new { code, category = "Window", message = "Placeholder response" }));
 
-// System Components endpoints (ProductDesign)
-app.MapPost("/api/systems/{code}/components", (string code) => Results.Created($"/api/systems/{code}/components", new { message = $"Component configured for system {code} (placeholder)" }));
-app.MapPut("/api/components/{id}", (string id) => Results.Ok(new { message = $"Component {id} updated (placeholder)" }));
-app.MapGet("/api/systems/{code}/components", (string code) => Results.Ok(new[] { new { id = "placeholder", name = "Sample Component" } }));
-app.MapDelete("/api/components/{id}", (string id) => Results.NoContent());
+// Additional placeholder endpoints for future implementation
 app.MapPost("/api/components/{id}/test", (string id) => Results.Ok(new { result = 0, message = $"Component {id} test calculation (placeholder)" }));
 
 // Orders endpoints (OrderProcessing)
