@@ -1,6 +1,10 @@
 using MediatR;
 using System.Net;
 using AGS.WindowsAndDoors.ProductDesign.Application.UseCases.AddComponent;
+using AGS.WindowsAndDoors.ProductDesign.Application.UseCases.UpdateComponent;
+using AGS.WindowsAndDoors.ProductDesign.Application.UseCases.RemoveComponent;
+using AGS.WindowsAndDoors.ProductDesign.Application.UseCases.ListComponents;
+using AGS.WindowsAndDoors.ProductDesign.Application.UseCases.GetComponent;
 using AGS.WindowsAndDoors.SharedKernel.Domain.ValueObjects;
 using AGS.WindowsAndDoors.SharedKernel.Domain.Exceptions;
 
@@ -34,6 +38,7 @@ public record ComponentResponse(
     string SystemCode,
     string ItemCode,
     string Name,
+    string Description,
     int Quantity,
     ComponentDimensionsResponse? Dimensions,
     bool IsRequired,
@@ -127,24 +132,11 @@ public static class ComponentsEndpoints
     {
         try
         {
-            // TODO: Implement GetComponentsQuery and handler
-            // For now, return placeholder
-            return Results.Ok(new[] {
-                new ComponentResponse(
-                    Id: "placeholder1",
-                    SystemCode: code,
-                    ItemCode: "2103",
-                    Name: "Frame Vertical",
-                    Quantity: 2,
-                    Dimensions: new ComponentDimensionsResponse(
-                        LengthFormula: "frame.Height",
-                        FixedLength: null
-                    ),
-                    IsRequired: true,
-                    SortOrder: 1,
-                    CreatedAt: DateTime.UtcNow
-                )
-            });
+            var query = new ListComponentsQuery(code);
+            var components = await mediator.Send(query);
+
+            var responses = components.Select(MapToResponse).ToList();
+            return Results.Ok(responses);
         }
         catch (Exception ex)
         {
@@ -156,8 +148,16 @@ public static class ComponentsEndpoints
     {
         try
         {
-            // TODO: Implement GetComponentQuery and handler
-            return Results.NotFound($"Component with id '{id}' not found");
+            var query = new GetComponentQuery(id);
+            var component = await mediator.Send(query);
+
+            if (component is null)
+            {
+                return Results.NotFound($"Component with id '{id}' not found");
+            }
+
+            var response = MapToResponse(component);
+            return Results.Ok(response);
         }
         catch (Exception ex)
         {
@@ -169,8 +169,37 @@ public static class ComponentsEndpoints
     {
         try
         {
-            // TODO: Implement UpdateComponentCommand and handler
-            return Results.NotFound($"Component with id '{id}' not found");
+            var command = new UpdateComponentCommand(
+                ComponentId: id,
+                Name: request.Name,
+                Quantity: request.Quantity,
+                Description: request.Description,
+                LengthFormula: request.LengthFormula,
+                FixedLengthValue: request.FixedLengthValue,
+                FixedLengthUnit: request.FixedLengthUnit,
+                IsRequired: request.IsRequired,
+                SortOrder: request.SortOrder
+            );
+
+            var componentId = await mediator.Send(command);
+            return Results.Ok(new { id = componentId });
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Results.Problem(
+                ex.Message,
+                statusCode: (int)HttpStatusCode.BadRequest,
+                title: "Validation Error"
+            );
+        }
+        catch (BusinessRuleViolationException ex)
+        {
+            return Results.Problem(
+                ex.Message,
+                statusCode: (int)HttpStatusCode.Conflict,
+                title: "Business Rule Violation",
+                type: ex.RuleName
+            );
         }
         catch (Exception ex)
         {
@@ -182,12 +211,60 @@ public static class ComponentsEndpoints
     {
         try
         {
-            // TODO: Implement RemoveComponentCommand and handler
+            var command = new RemoveComponentCommand(id);
+            await mediator.Send(command);
             return Results.NoContent();
+        }
+        catch (InvalidOperationException ex)
+        {
+            return Results.Problem(
+                ex.Message,
+                statusCode: (int)HttpStatusCode.BadRequest,
+                title: "Validation Error"
+            );
+        }
+        catch (BusinessRuleViolationException ex)
+        {
+            return Results.Problem(
+                ex.Message,
+                statusCode: (int)HttpStatusCode.Conflict,
+                title: "Business Rule Violation",
+                type: ex.RuleName
+            );
         }
         catch (Exception ex)
         {
             return Results.Problem(ex.Message, statusCode: (int)HttpStatusCode.InternalServerError);
         }
+    }
+
+    private static ComponentResponse MapToResponse(ComponentDto dto)
+    {
+        return new ComponentResponse(
+            Id: dto.Id,
+            SystemCode: dto.SystemCode,
+            ItemCode: dto.ItemCode,
+            Name: dto.Name,
+            Description: dto.Description,
+            Quantity: dto.Quantity,
+            Dimensions: MapDimensions(dto.Dimensions),
+            IsRequired: dto.IsRequired,
+            SortOrder: dto.SortOrder,
+            CreatedAt: dto.CreatedAt
+        );
+    }
+
+    private static ComponentDimensionsResponse MapDimensions(ComponentDimensionsDto dimensions)
+    {
+        MeasureResponse? fixedLength = null;
+        if (dimensions.FixedLength is not null)
+        {
+            fixedLength = new MeasureResponse(dimensions.FixedLength.Value, dimensions.FixedLength.Unit);
+        }
+
+        return new ComponentDimensionsResponse(
+            LengthFormula: dimensions.LengthFormula,
+            FixedLength: fixedLength
+        );
     }
 }

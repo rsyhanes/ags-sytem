@@ -12,7 +12,7 @@ export const routes: Routes = [
   },
   {
     path: 'systems',
-    loadComponent: () => import('./features/systems/systems.component').then(m => m.SystemsComponent)
+    loadChildren: () => import('./features/systems').then(m => m.SYSTEMS_ROUTES)
   },
   {
     path: 'items',
