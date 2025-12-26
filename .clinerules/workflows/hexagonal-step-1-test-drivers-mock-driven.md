@@ -16,16 +16,21 @@ You are implementing Step 1 of the hexagonal architecture development process: *
 1. **Read the target spec** to understand what to implement:
    ```xml
    <read_file>
-   <path>arc/specs/[spec-id].yaml</path>
+   <path>arc/specs/[spec-id].spec.yaml</path>
    </read_file>
    ```
 
-2. **Extract key information** from the spec:
-   - `objective`: What the feature should accomplish
-   - `scope.domain`: Entities, value objects, use cases
-   - `scope.ports.driving`: Driver port interfaces (use cases)
-   - `scope.ports.driven`: Driven port interfaces (repositories, external services)
-   - `scenarios`: BDD test scenarios (Given/When/Then)
+2. **Extract key information** from the spec following domain-first order:
+   - `domain.problem`: What problem the feature solves
+   - `domain.rationale`: Why this feature exists
+   - `domain.concepts`: Entities, value objects, domain events
+   - `domain.rules`: Business constraints (must/cannot)
+   - `domain.use_case`: Core domain behavior and steps
+   - `interactions.inbound`: How the system is triggered (API, UI, events)
+   - `interactions.outbound`: What the system produces (responses, events, persistence)
+   - `contracts`: Schema references for domain, inbound, outbound, ui_state
+   - `scenarios`: Behavioral validation scenarios
+   - `deliverables`: Required implementation artifacts
    - `packs`: Referenced rule packs
 
 ## 2. Resolve Referenced Rule Packs
@@ -103,7 +108,17 @@ public record [ValueObject]([parameters])
    </write_to_file>
    ```
 
-3. **Define driven port interfaces**:
+3. **Create domain events as records**:
+   ```xml
+   <write_to_file>
+   <path>src/BoundedContexts/[Context]/AGS.WindowsAndDoors.[Context].Domain/DomainEvents/[DomainEvent].cs</path>
+   <content>namespace AGS.WindowsAndDoors.[Context].Domain.DomainEvents;
+
+public record [DomainEvent]([parameters]) : IDomainEvent;</content>
+   </write_to_file>
+   ```
+
+4. **Define driven port interfaces**:
    ```xml
    <write_to_file>
    <path>src/BoundedContexts/[Context]/AGS.WindowsAndDoors.[Context].Domain/Ports/I[PortName]Port.cs</path>
@@ -128,7 +143,7 @@ public record [UseCase]Command([parameters]) : IRequest<[ResponseType]>;</conten
    </write_to_file>
    ```
 
-2. **Create command handlers**:
+2. **Create command handlers with domain event publishing**:
    ```xml
    <write_to_file>
    <path>src/BoundedContexts/[Context]/AGS.WindowsAndDoors.[Context].Application/UseCases/[UseCase]/[UseCase]CommandHandler.cs</path>
@@ -137,17 +152,24 @@ public record [UseCase]Command([parameters]) : IRequest<[ResponseType]>;</conten
 public class [UseCase]CommandHandler : IRequestHandler<[UseCase]Command, [ResponseType]>
 {
     private readonly I[DrivenPort]Port _drivenPort;
+    private readonly IMediator _mediator;
 
-    public [UseCase]CommandHandler(I[DrivenPort]Port drivenPort)
+    public [UseCase]CommandHandler(I[DrivenPort]Port drivenPort, IMediator mediator)
     {
         _drivenPort = drivenPort;
+        _mediator = mediator;
     }
 
     public async Task<[ResponseType]> Handle([UseCase]Command request, CancellationToken ct)
     {
         // Use case implementation
         // Orchestrate domain logic
-        // Call driven ports
+        var result = await _drivenPort.[OperationAsync](/* domain operation */);
+
+        // Publish domain events when operation succeeds
+        await _mediator.Publish(new [DomainEvent](/* event data */), ct);
+
+        return result;
     }
 }</content>
    </write_to_file>

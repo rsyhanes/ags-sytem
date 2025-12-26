@@ -16,7 +16,7 @@
 ### 1. Spec Validation & Loading
 - Validate spec_id format matches `context.feature.v1` pattern
 - Locate spec file at `arc/specs/{spec_id}.spec.yaml`
-- Parse YAML structure and extract deliverables/scenarios
+- Parse YAML structure and extract domain, interactions, contracts, scenarios, deliverables, packs
 
 ### 2. Architecture Layer Analysis
 
@@ -111,7 +111,7 @@
 ```
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │                                SPEC: {spec_id}                                   │
-│                     "{spec.objective}"                                           │
+│                     "{domain.problem}"                                           │
 └─────────────────────┬──────────────────────────────────────────────────────────────┘
                       │                                                ┌─────────────┐
                       │ Dependencies flow                           ┌─►│ CONTRACTS    │

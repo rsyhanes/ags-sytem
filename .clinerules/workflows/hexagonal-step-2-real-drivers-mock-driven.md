@@ -16,7 +16,7 @@ You are implementing Step 2 of the hexagonal architecture development process: *
 1. **Re-read the target spec** to understand driver port requirements:
    ```xml
    <read_file>
-   <path>arc/specs/[spec-id].yaml</path>
+   <path>arc/specs/[spec-id].spec.yaml</path>
    </read_file>
    ```
 
@@ -155,7 +155,38 @@ public static class [Feature]Endpoints
    - Environment variable: `ASPNETCORE_ENVIRONMENT=Testing`
    - Configuration setting: `UseMockAdapters=true`
 
-## 4. Register and Test Endpoints
+## 4. Validate Contract Compliance
+
+1. **Verify OpenAPI contract alignment**:
+   - Ensure endpoint paths match `interactions.inbound.api` from spec
+   - Validate request/response schemas conform to OpenAPI specifications
+   - Check that all required CRUD operations are implemented
+
+2. **Validate internal contract usage**:
+   ```xml
+   <list_files>
+   <path>arc/contracts/internal/commands</path>
+   </list_files>
+   ```
+
+   Ensure command/query objects in application layer use internal contract schemas.
+
+## 5. Verify Application Layer Integration
+
+1. **Confirm command handlers are implemented**:
+   - CQRS pattern followed (commands for writes, queries for reads)
+   - Dependency injection properly configured for ports
+   - Error handling with `BusinessRuleViolationException`
+
+2. **Test use case orchestration**:
+   ```xml
+   <execute_command>
+   <command>dotnet test src/BoundedContexts/[Context]/AGS.WindowsAndDoors.[Context].Tests/AGS.WindowsAndDoors.[Context].Tests.csproj --filter "Application"</command>
+   <requires_approval>false</requires_approval>
+   </execute_command>
+   ```
+
+## 6. Register and Test Endpoints
 
 1. **Register the new endpoints** in `Program.cs`:
    ```csharp
@@ -171,10 +202,18 @@ public static class [Feature]Endpoints
    </execute_command>
    ```
 
-## 5. Verify Step 2 Complete
+3. **Validate full CRUD coverage**:
+   - POST for create operations
+   - GET for read operations (single + collection)
+   - PUT/PATCH for update operations
+   - DELETE for removal operations (if applicable)
+
+## 7. Verify Step 2 Complete
 
 1. **Test API endpoints** using tools like Postman or curl to ensure they work with mock data
 2. **Run existing unit tests** to ensure the new driver adapters don't break existing functionality
 3. **Validate architecture compliance** by checking that business logic remains in the domain layer
 4. **Confirm mock adapters** can be easily switched with real implementations in the composition root
-5. **Document the Step 2 completion** and prepare for Step 3 (real driven adapters)
+5. **Verify contract compliance** - endpoints align with OpenAPI specs and internal contracts
+6. **Confirm application layer integration** - CQRS pattern, dependency injection, error handling
+7. **Document the Step 2 completion** and prepare for Step 3 (real driven adapters)

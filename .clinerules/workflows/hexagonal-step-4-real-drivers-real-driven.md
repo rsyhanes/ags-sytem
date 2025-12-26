@@ -16,7 +16,7 @@ You are implementing Step 4 of the hexagonal architecture development process: *
 1. **Final review of target spec**:
    ```xml
    <read_file>
-   <path>arc/specs/[spec-id].yaml</path>
+   <path>arc/specs/[spec-id].spec.yaml</path>
    </read_file>
    ```
 
